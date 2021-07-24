@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template import loader
 
 from .forms import NewUserForm
 
@@ -46,4 +48,10 @@ def logout_request(request):
 
 def homepage(request):
     if not request.user.is_authenticated:
-        return redirect("main:login")
+        template = loader.get_template('main/index.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
+    else:
+        template = loader.get_template('main/home.html')
+        context = {}  # todo with id
+        return HttpResponse(template.render(context, request))

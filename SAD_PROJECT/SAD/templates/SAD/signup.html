@@ -175,18 +175,27 @@ input[type=submit]:active {
   line-height: 34px;
 }
 
+
     </style>
 </head>
 <body>
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
 <div class="login">
     <h1>Signup</h1>
     <form method="post" action="">
+        {% csrf_token %}
+        {{ register_form|crispy }}
         <p><input type="text" name="username" value="" placeholder="Username"></p>
         <p><input type="password" name="password" value="" placeholder="Password"></p>
 
         <p class="submit"><input type="submit" name="commit" value="Signup"></p>
     </form>
 </div>
+{% endblock %}
 
 <!--<div class="login-help">-->
 <!--    <p>Forgot your password? <a href="#">Click here to reset it</a>.</p>-->

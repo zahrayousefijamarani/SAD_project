@@ -18,14 +18,14 @@ def random_id(length):
 
 # Create your models here
 class Wallet(models.Model):
-    credit = models.CharField()
+    credit = models.CharField(max_length=10)
 
 
 class Transaction(models.Model):
     date = models.DateField(auto_now=True)
-    description = models.CharField()
-    payment_type = models.CharField()
-    cash_amount = models.CharField()
+    description = models.CharField(max_length=100)
+    payment_type = models.CharField(max_length=100)
+    cash_amount = models.CharField(max_length=10)
     wallet = models.ForeignKey(Wallet, related_name='transactions', on_delete=models.CASCADE)
 
 
