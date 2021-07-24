@@ -4,11 +4,37 @@
     <meta charset="UTF-8">
     <title>Signup</title>
     <style>
-        body {
+body {
+margin: 0;
   font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
   background-image: url('https://static.vecteezy.com/system/resources/previews/002/276/716/non_2x/abstract-geometric-background-in-flat-design-free-vector.jpg');
   background-size: 100% 100%;
   background-attachment: fixed;
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
 }
 
 .login {
@@ -179,6 +205,12 @@ input[type=submit]:active {
     </style>
 </head>
 <body>
+
+<div class="topnav">
+  <a class="active" href="/">Home</a>
+  <a href="/login/">Login</a>
+  <a href="/register/">Signup</a>
+</div>
 
 {% block content %}
 
