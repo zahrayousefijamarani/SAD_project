@@ -226,6 +226,13 @@ input[type=submit]:active {
         <p class="submit"><input type="submit" name="commit" value="Login"></p>
     </form>
 </div>
+
+{% for message in messages %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endfor %}
+
 {% endblock %}
 
 <!--<div class="login-help">-->

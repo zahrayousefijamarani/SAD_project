@@ -216,6 +216,12 @@ input[type=submit]:active {
 
 {% load crispy_forms_tags %}
 
+{% for message in messages %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endfor %}
+
 <div class="login">
     <h1>Signup</h1>
     <form method="post" action="">

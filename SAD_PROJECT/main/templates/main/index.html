@@ -47,6 +47,16 @@ body {
   <a href="/register/">Signup</a>
 </div>
 
+{% block content %}
+
+{% for message in messages %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endfor %}
+
+{% endblock %}
+
 <div style="padding-left:16px">
 
 </div>
