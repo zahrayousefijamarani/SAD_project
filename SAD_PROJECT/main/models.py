@@ -32,7 +32,7 @@ class Transaction(models.Model):
 class Account(models.Model):
     user = models.ForeignKey(User, related_name='accounts', on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
-    access_final_date = models.DateField(verbose_name='تاریخ انقضای token')
+    access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
     uid = models.CharField(max_length=ID_FIELD_LENGTH, null=False, blank=False, unique=True, verbose_name='آیدی یکتا')
 
     @classmethod
@@ -59,7 +59,6 @@ class Account(models.Model):
     @classmethod
     def get_account_by_user(cls, user_id):
         return cls.objects.get(user__id=user_id)
-
 
     @classmethod
     def new_account(cls, user):
