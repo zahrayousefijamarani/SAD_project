@@ -53,5 +53,5 @@ def homepage(request):
         return HttpResponse(template.render(context, request))
     else:
         template = loader.get_template('main/home.html')
-        context = {}  # todo with id
+        context = {'username': 'xxx', 'email': 'eee', 'credit': 145}  # todo with id
         return HttpResponse(template.render(context, request))
