@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from .forms import NewUserForm
+from .models import Account
 
 
 def register_request(request):
@@ -13,6 +14,7 @@ def register_request(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
+            Account.new_account(user)
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("main:homepage")
@@ -53,5 +55,6 @@ def homepage(request):
         return HttpResponse(template.render(context, request))
     else:
         template = loader.get_template('main/home.html')
-        context = {'username': 'xxx', 'email': 'eee', 'credit': 145}  # todo with id
+        acc = Account.get_account_by_user(request.user.id)
+        context = acc.serializer()
         return HttpResponse(template.render(context, request))

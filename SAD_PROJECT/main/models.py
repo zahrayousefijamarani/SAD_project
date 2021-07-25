@@ -18,7 +18,7 @@ def random_id(length):
 
 # Create your models here
 class Wallet(models.Model):
-    credit = models.CharField(max_length=10)
+    credit = models.CharField(max_length=10, default=0)
 
 
 class Transaction(models.Model):
@@ -47,7 +47,7 @@ class Account(models.Model):
     def serializer(self, random_key=None):
 
         return {
-            'uid': self.uid,
+            'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit
         }
 
     def save(self, *args, **kwargs):
@@ -55,3 +55,15 @@ class Account(models.Model):
             self.uid = Account.generate_uid()
 
         return super(Account, self).save(*args, **kwargs)
+
+    @classmethod
+    def get_account_by_user(cls, user_id):
+        return cls.objects.get(user__id=user_id)
+
+
+    @classmethod
+    def new_account(cls, user):
+        w = Wallet()
+        w.save()
+        acc = Account(user=user, wallet=w)
+        acc.save()
