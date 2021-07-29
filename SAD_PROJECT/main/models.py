@@ -66,3 +66,4 @@ class Account(models.Model):
         w.save()
         acc = Account(user=user, wallet=w)
         acc.save()
+

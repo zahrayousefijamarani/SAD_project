@@ -48,6 +48,18 @@ def logout_request(request):
     return redirect("main:homepage")
 
 
+def contact_request(request):
+    template = loader.get_template('main/contacts.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+
+def group_request(request):
+    template = loader.get_template('main/group.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+
 def homepage(request):
     if not request.user.is_authenticated:
         template = loader.get_template('main/index.html')
