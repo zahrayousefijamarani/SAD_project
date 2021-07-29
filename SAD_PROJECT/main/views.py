@@ -50,6 +50,12 @@ def logout_request(request):
 
 def contact_request(request):
     template = loader.get_template('main/contacts.html')
+    context = {'contacts': [{'name': 'a', 'email':'z.y.j.1379@gmail.com','id': 1}, {'name': 'b','email':'z.y.j.1379@gmail.com', 'id': 2}, {'name': 'c','email':'z.y.j.1379@gmail.com', 'id': 3}]}
+    return HttpResponse(template.render(context, request))
+
+
+def add_contact_request(request): # send a form
+    template = loader.get_template('main/add_contact.html')
     context = {}
     return HttpResponse(template.render(context, request))
 
@@ -60,12 +66,16 @@ def group_request(request):
     return HttpResponse(template.render(context, request))
 
 
-def add_group_request(request):
-    pass
+def add_group_request(request):  # send a form
+    template = loader.get_template('main/add_group.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 
 def show_group_request(request, group_id):
-    pass
+    template = loader.get_template('main/specific_group.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 
 def homepage(request):
