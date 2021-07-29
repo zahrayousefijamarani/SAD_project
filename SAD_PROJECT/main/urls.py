@@ -11,4 +11,6 @@ urlpatterns = [
     path("logout/", views.logout_request, name="logout"),
     path("contacts/", views.contact_request, name="contacts"),
     path("group/", views.group_request, name="group"),
+    path("add_group/", views.add_group_request, name="add_group"),
+    path("show_group/<int:group_id>/", views.show_group_request, name="show_group"),
 ]

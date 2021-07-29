@@ -56,8 +56,16 @@ def contact_request(request):
 
 def group_request(request):
     template = loader.get_template('main/group.html')
-    context = {}
+    context = {'groups': [{'name': 'a', 'id': 1}, {'name': 'b', 'id': 2}, {'name': 'c', 'id': 3}]}
     return HttpResponse(template.render(context, request))
+
+
+def add_group_request(request):
+    pass
+
+
+def show_group_request(request, group_id):
+    pass
 
 
 def homepage(request):
