@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from .forms import NewUserForm
-from .models import Account
+from .models import Account, Contact
 
 
 def register_request(request):
@@ -50,7 +50,8 @@ def logout_request(request):
 
 def contact_request(request):
     template = loader.get_template('main/contacts.html')
-    context = {'contacts': [{'name': 'a', 'email':'z.y.j.1379@gmail.com','id': 1}, {'name': 'b','email':'z.y.j.1379@gmail.com', 'id': 2}, {'name': 'c','email':'z.y.j.1379@gmail.com', 'id': 3}]}
+    acc = Account.get_account_by_user(request.user.id)
+    context = {'contacts': Contact.get_contacts(acc)}
     return HttpResponse(template.render(context, request))
 
 

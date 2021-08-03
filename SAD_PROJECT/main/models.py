@@ -30,7 +30,7 @@ class Transaction(models.Model):
 
 
 class Account(models.Model):
-    user = models.ForeignKey(User, related_name='accounts', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
     access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
     uid = models.CharField(max_length=ID_FIELD_LENGTH, null=False, blank=False, unique=True, verbose_name='آیدی یکتا')
@@ -67,3 +67,32 @@ class Account(models.Model):
         acc = Account(user=user, wallet=w)
         acc.save()
 
+
+class Contact(models.Model):
+    account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
+    contact_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=False)
+
+    def serializer(self):
+        return {
+            'name': self.contact_account.user.username, 'email': self.contact_account.user.email,
+            'id': self.contact_account.uid
+        }
+
+    @classmethod
+    def add_contact(cls, s, d):
+        if s is None or d is None:
+            return
+        c = Contact(account=s, contact_account=d)
+        c.save()
+
+    @classmethod
+    def get_contacts(cls, account):
+        if account is None:
+            return
+        list_of_contacts = cls.objects.get(account=account)
+        return [i.serializer() for i in list_of_contacts]
+
+
+# class InvitationRequest(models.Model):
+#     source_account = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     invited_account = models.ForeignKey(Account, on_delete=models.CASCADE)
