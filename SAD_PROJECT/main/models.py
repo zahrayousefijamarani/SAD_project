@@ -88,7 +88,7 @@ class Contact(models.Model):
     @classmethod
     def get_contacts(cls, account):
         if account is None:
-            return
+            return []
         list_of_contacts = cls.objects.get(account=account)
         return [i.serializer() for i in list_of_contacts]
 

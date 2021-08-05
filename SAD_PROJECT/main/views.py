@@ -51,11 +51,11 @@ def logout_request(request):
 def contact_request(request):
     template = loader.get_template('main/contacts.html')
     acc = Account.get_account_by_user(request.user.id)
-    context = {'contacts': Contact.get_contacts(acc)}
+    context = {'contacts': Contact.get_contacts(request.user.id)}
     return HttpResponse(template.render(context, request))
 
 
-def add_contact_request(request): # send a form
+def add_contact_request(request):  # send a form
     template = loader.get_template('main/add_contact.html')
     context = {}
     return HttpResponse(template.render(context, request))
@@ -89,3 +89,15 @@ def homepage(request):
         acc = Account.get_account_by_user(request.user.id)
         context = acc.serializer()
         return HttpResponse(template.render(context, request))
+
+
+def all_expenses(request):
+    template = loader.get_template('main/expenses.html')
+    context = {'expenses': [{'description': 'aaaaaaa', 'cost': '3'}, {'description': 'cccccccc', 'cost': '43'},
+                            {'description': 'bbbbbbbb', 'cost': '55'}]}
+    return HttpResponse(template.render(context, request))
+
+
+def pay(request, cost_id):
+    # pay this cost id form wallet and add to receiver
+    pass

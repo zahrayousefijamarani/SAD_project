@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Group</title>
+    <title>Expenses</title>
     <style>
         /*** FONTS ***/
 @import url(https://fonts.googleapis.com/css?family=Montserrat:900|Raleway:400,400i,700,700i);
@@ -28,7 +28,7 @@ body {
 }
 
 body {
-  background-image: url('https://wallpaperaccess.com/full/2034275.jpg');
+  background-image: url('https://wallpaperaccess.com/full/1201167.jpg');
   background-size: 100% 100%;
   background-attachment: fixed;
   color: #1d1f20;
@@ -144,13 +144,10 @@ ol.gradient-list > li + li {
 <body>
 {% block content %}
 <main>
-    <a href='/add_group'>
-        <button class="button button1">Add group</button>
-    </a>
     <ol class="gradient-list">
-        {% for group in groups %}
+        {% for e in expenses %}
         <li>
-            <a href='/show_group/{{group.id}}'>{{ group.name }}</a>
+           {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
         </li>
         {% endfor %}
     </ol>
