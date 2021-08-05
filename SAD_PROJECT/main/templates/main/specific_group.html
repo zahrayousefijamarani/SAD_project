@@ -1,10 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" content="width=device-width, initial-scale=1">
     <title>Splitwise Group</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
+
+    </script>
+    <style>
+        body {
+  background-image: url('https://wallpaperaccess.com/full/663012.jpg');
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  color: #1d1f20;
+  font-family: "Raleway", sans-serif;
+}
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+
+
+    </style>
 </head>
 <body>
+{% block content %}
 
+<div class="split left">
+    <ul class="w3-ul w3-card-4">
+        <li class="w3-bar">
+            <span>Members</span>
+        </li>
+    </ul>
+    <div class="w3-container">
+        <ul class="w3-ul w3-card-4">
+            {% for m in members %}
+            <li id="{{m.name}}" style="margin=10px;" class="w3-bar">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/000/550/731/small/user_icon_004.jpg"
+                     class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+                <div class="w3-bar-item">
+                    <span class="w3-large">{{m.name}}</span><br>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="split right">
+    <ul class="w3-ul w3-card-4">
+        <li style="background-color: rgba(225, 225, 225, 0.5);" class="w3-bar">
+            <span>Share</span>
+        </li>
+    </ul>
+</div>
+{% endblock %}
 </body>
 </html>

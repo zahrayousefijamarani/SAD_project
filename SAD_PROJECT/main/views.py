@@ -75,7 +75,7 @@ def add_group_request(request):  # send a form
 
 def show_group_request(request, group_id):
     template = loader.get_template('main/specific_group.html')
-    context = {}
+    context = {'members': [{'name': 'zahra'}, {'name': 'dahlia'}, {'name': 'erfan'}]}
     return HttpResponse(template.render(context, request))
 
 
