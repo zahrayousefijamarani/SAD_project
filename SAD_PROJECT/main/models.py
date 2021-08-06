@@ -51,6 +51,10 @@ class Account(models.Model):
             'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit
         }
 
+    def serializer_2(self):
+        return {
+            'id': self.uid, 'name': self.user.username}
+
     def save(self, *args, **kwargs):
         if not self.uid:
             self.uid = Account.generate_uid()
@@ -94,7 +98,8 @@ class Contact(models.Model):
     def get_contacts(cls, account):
         if account is None:
             return []
-        list_of_contacts = cls.objects.filter(account=account)
+        print(Contact.objects.all())
+        list_of_contacts = Contact.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
 
 
@@ -109,7 +114,18 @@ class Group(models.Model):
             return
         g = Group(group_name=name, admin=admin)
         g.save()
+        g.members.add(admin)
         return g.pk
+
+    @staticmethod
+    def add_members(id, member_list):
+        gp = Group.objects.get(pk=id)
+        for l in member_list:
+            gp.members.add(l)
+
+    @staticmethod
+    def get_group(id):
+        return Group.objects.get(pk=id)
 
     def serializer(self):
         return {
@@ -120,10 +136,16 @@ class Group(models.Model):
     def get_all_group(account):
         list_of_group = Group.objects.all()
         choosen = []
+
         for l in list_of_group:
-            if account in l.members:
+            if account in l.members.all():
                 choosen.append(l)
         return [i.serializer() for i in choosen]
+
+    @classmethod
+    def get_members(cls, gp):
+        l = gp.members.all()
+        return [i.serializer_2() for i in l]
 
 
 # class GroupMember(models.Model):
