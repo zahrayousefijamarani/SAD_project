@@ -103,7 +103,6 @@ class Contact(models.Model):
     def get_contacts(cls, account):
         if account is None:
             return []
-        print(Contact.objects.all())
         list_of_contacts = Contact.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
 

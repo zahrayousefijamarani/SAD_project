@@ -65,7 +65,15 @@ def add_contact_request(request):  # send a form
 
     else:
         template = loader.get_template('main/add_contact.html')
-        context = {'users': Account.get_all_accounts()}
+        all_account = Account.get_all_accounts()
+        c = Contact.get_contacts(Account.get_account_by_user(request.user.id))
+        contacts = list([i['id'] for i in c])
+        accounts = []
+        for acc in all_account:
+            if not (acc['id'] == request.user.id or acc['id'] in contacts):
+                accounts.append(acc)
+
+        context = {'users': accounts}
         return HttpResponse(template.render(context, request))
 
 
