@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django import forms
 
+
 ID_FIELD_LENGTH = 16
 alphabet = string.ascii_lowercase + string.digits
 

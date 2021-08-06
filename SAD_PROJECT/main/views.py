@@ -92,9 +92,24 @@ def group_member_request(request, group_id):
     return HttpResponse(template.render(context, request))
 
 
+def acc_group_request(request, group_id, user_id):
+    Group.add_members(group_id, [user_id])
+    return HttpResponseRedirect(reverse('main:homepage', args=()))
+
+
 def done_group_member_request(request, group_id):
     checked_id = request.POST.getlist('tag')
-    Group.add_members(group_id, checked_id)
+    for id in checked_id:
+        acc = Account.get_account_by_user(id)
+        print(acc.user.email)
+        print('click http://127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id))
+        print("----------------")
+        # result = EmailSender().send_email([acc.user.email],
+        #                                   'Inviting Group',
+        #                                   'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id),
+        #                                   'main/home.html',
+        #                                   'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id))
+        # print(result)
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))
 
 
