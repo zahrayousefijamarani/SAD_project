@@ -3,6 +3,7 @@ import string
 
 from django.contrib.auth.models import User
 from django.db import models
+from django import forms
 
 ID_FIELD_LENGTH = 16
 alphabet = string.ascii_lowercase + string.digits
@@ -67,6 +68,10 @@ class Account(models.Model):
         acc = Account(user=user, wallet=w)
         acc.save()
 
+    @staticmethod
+    def get_account_by_user(user_id):
+        return Account.objects.get(user__id=user_id)
+
 
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
@@ -89,9 +94,50 @@ class Contact(models.Model):
     def get_contacts(cls, account):
         if account is None:
             return []
-        list_of_contacts = cls.objects.get(account=account)
+        list_of_contacts = cls.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
 
+
+class Group(models.Model):
+    group_name = models.CharField(max_length=250)
+    admin = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admin_account")
+    members = models.ManyToManyField(Account, related_name="member_accounts")
+
+    @staticmethod
+    def create_group(name, admin):
+        if name == "" or admin is None:
+            return
+        g = Group(group_name=name, admin=admin)
+        g.save()
+        return g.pk
+
+    def serializer(self):
+        return {
+            'name': self.group_name, 'id': self.pk
+        }
+
+    @staticmethod
+    def get_all_group(account):
+        list_of_group = Group.objects.all()
+        choosen = []
+        for l in list_of_group:
+            if account in l.members:
+                choosen.append(l)
+        return [i.serializer() for i in choosen]
+
+
+# class GroupMember(models.Model):
+#     group = models.ForeignKey(Group, models.CASCADE)
+#     account = models.ForeignKey(Account, models.CASCADE)
+#
+#     @classmethod
+#     def add_member(cls, group, account):
+#         gm = GroupMember(group=group, account=account)
+#         gm.save()
+
+
+class GroupForm(forms.Form):
+    group_name = forms.CharField(label='Group name', max_length=100)
 
 # class InvitationRequest(models.Model):
 #     source_account = models.ForeignKey(Account, on_delete=models.CASCADE)

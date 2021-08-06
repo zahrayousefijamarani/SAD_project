@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.urls import reverse
 
 from .forms import NewUserForm
-from .models import Account, Contact
+from .models import Account, Contact, GroupForm, Group
 
 
 def register_request(request):
@@ -51,26 +52,52 @@ def logout_request(request):
 def contact_request(request):
     template = loader.get_template('main/contacts.html')
     acc = Account.get_account_by_user(request.user.id)
-    context = {'contacts': Contact.get_contacts(request.user.id)}
+    context = {'contacts': Contact.get_contacts(acc)}
     return HttpResponse(template.render(context, request))
 
 
 def add_contact_request(request):  # send a form
-    template = loader.get_template('main/add_contact.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+    if request.method == "POST":
+        pass
+    else:
+        template = loader.get_template('main/add_contact.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
 
 
 def group_request(request):
     template = loader.get_template('main/group.html')
-    context = {'groups': [{'name': 'a', 'id': 1}, {'name': 'b', 'id': 2}, {'name': 'c', 'id': 3}]}
+    acc = Account.get_account_by_user(request.user.id)
+    context = {'groups': Group.get_all_group(acc)}
     return HttpResponse(template.render(context, request))
+
+
+def group_member_request(request, group_id):
+    template = loader.get_template('main/choose_member.html')
+    acc = Account.get_account_by_user(request.user.id)
+    context = {'contacts': Contact.get_contacts(acc),
+               'g_id': group_id}
+    return HttpResponse(template.render(context, request))
+
+
+def done_group_member_request(request, group_id):
+    checked_id = request.POST.getlist('tag')
+
+    # return HttpResponseRedirect(reverse('main:group', args=(group_id,)))
 
 
 def add_group_request(request):  # send a form
-    template = loader.get_template('main/add_group.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get('group_name')
+            pk = Group.create_group(name, Account.get_account_by_user(request.user.id))
+            return HttpResponseRedirect(reverse('main:group_member', args=(pk,)))
+        else:
+            messages.error(request, "Invalid name")
+    else:
+        form = GroupForm()
+    return render(request, 'main/add_group.html', {'form': form})
 
 
 def show_group_request(request, group_id):
