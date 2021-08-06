@@ -7,7 +7,7 @@ from django.template import loader
 from django.urls import reverse
 
 from .forms import NewUserForm
-from .models import Account, Contact, GroupForm, Group
+from .models import Account, Contact, GroupForm, Group, Expense
 
 
 def register_request(request):
@@ -133,8 +133,8 @@ def homepage(request):
 
 def all_expenses(request):
     template = loader.get_template('main/expenses.html')
-    context = {'expenses': [{'description': 'aaaaaaa', 'cost': '3'}, {'description': 'cccccccc', 'cost': '43'},
-                            {'description': 'bbbbbbbb', 'cost': '55'}]}
+    acc = Account.get_account_by_user(request.user.id)
+    context = {'expenses': Expense.get_all_expenses(acc)}
     return HttpResponse(template.render(context, request))
 
 

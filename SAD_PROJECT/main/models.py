@@ -82,6 +82,24 @@ class Account(models.Model):
         return [i.serializer_2() for i in l]
 
 
+class Expense(models.Model):
+    debtor = models.ForeignKey(Account, related_name="debtor", on_delete=models.CASCADE, null=False)
+    creditor = models.ForeignKey(Account, related_name="creditor", on_delete=models.CASCADE, null=False)
+    amount = models.IntegerField()
+    description = models.CharField(max_length=300)
+
+    def serializer(self):
+        return {
+            'cost': self.amount,
+            'description': self.description
+        }
+
+    @staticmethod
+    def get_all_expenses(debtor):
+        l = Expense.objects.filter(debtor=debtor)
+        return [i.serializer() for i in l]
+
+
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
     contact_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=False)
