@@ -58,10 +58,14 @@ def contact_request(request):
 
 def add_contact_request(request):  # send a form
     if request.method == "POST":
-        pass
+        checked_id = request.POST.getlist('tag')
+        for id in checked_id:
+            Contact.add_contact(Account.get_account_by_user(request.user.id), Account.get_account_by_user(id))
+        return HttpResponseRedirect(reverse('main:contacts', args=()))
+
     else:
         template = loader.get_template('main/add_contact.html')
-        context = {}
+        context = {'users': Account.get_all_accounts()}
         return HttpResponse(template.render(context, request))
 
 

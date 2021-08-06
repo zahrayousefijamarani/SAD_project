@@ -53,7 +53,7 @@ class Account(models.Model):
 
     def serializer_2(self):
         return {
-            'id': self.uid, 'name': self.user.username}
+            'id': self.user.pk, 'name': self.user.username}
 
     def save(self, *args, **kwargs):
         if not self.uid:
@@ -76,6 +76,11 @@ class Account(models.Model):
     def get_account_by_user(user_id):
         return Account.objects.get(user__id=user_id)
 
+    @staticmethod
+    def get_all_accounts():
+        l = Account.objects.all()
+        return [i.serializer_2() for i in l]
+
 
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
@@ -84,7 +89,7 @@ class Contact(models.Model):
     def serializer(self):
         return {
             'name': self.contact_account.user.username, 'email': self.contact_account.user.email,
-            'id': self.contact_account.uid
+            'id': self.contact_account.user.id
         }
 
     @classmethod
