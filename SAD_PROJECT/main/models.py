@@ -3,8 +3,6 @@ import string
 
 from django.contrib.auth.models import User
 from django.db import models
-from django import forms
-
 
 ID_FIELD_LENGTH = 16
 alphabet = string.ascii_lowercase + string.digits
@@ -31,8 +29,21 @@ class Transaction(models.Model):
     wallet = models.ForeignKey(Wallet, related_name='transactions', on_delete=models.CASCADE)
 
 
+class Address(models.Model):
+    address = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=60, default="Tehran")
+    state = models.CharField(max_length=30, default="Tehran")
+    country = models.CharField(max_length=50, default="Iran")
+
+    class Meta:
+        verbose_name = 'Address'
+        verbose_name_plural = 'Address'
+
+
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=17, blank=True)
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
     access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
     uid = models.CharField(max_length=ID_FIELD_LENGTH, null=False, blank=False, unique=True, verbose_name='آیدی یکتا')
@@ -68,14 +79,12 @@ class Account(models.Model):
 
     @classmethod
     def new_account(cls, user):
+        adr = Address()
+        adr.save()
         w = Wallet()
         w.save()
-        acc = Account(user=user, wallet=w)
+        acc = Account(user=user, wallet=w, address=adr)
         acc.save()
-
-    @staticmethod
-    def get_account_by_user(user_id):
-        return Account.objects.get(user__id=user_id)
 
     @staticmethod
     def get_all_accounts():
@@ -124,66 +133,3 @@ class Contact(models.Model):
             return []
         list_of_contacts = Contact.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
-
-
-class Group(models.Model):
-    group_name = models.CharField(max_length=250)
-    admin = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admin_account")
-    members = models.ManyToManyField(Account, related_name="member_accounts")
-
-    @staticmethod
-    def create_group(name, admin):
-        if name == "" or admin is None:
-            return
-        g = Group(group_name=name, admin=admin)
-        g.save()
-        g.members.add(admin)
-        return g.pk
-
-    @staticmethod
-    def add_members(id, member_list):
-        gp = Group.objects.get(pk=id)
-        for l in member_list:
-            gp.members.add(l)
-
-    @staticmethod
-    def get_group(id):
-        return Group.objects.get(pk=id)
-
-    def serializer(self):
-        return {
-            'name': self.group_name, 'id': self.pk
-        }
-
-    @staticmethod
-    def get_all_group(account):
-        list_of_group = Group.objects.all()
-        choosen = []
-
-        for l in list_of_group:
-            if account in l.members.all():
-                choosen.append(l)
-        return [i.serializer() for i in choosen]
-
-    @classmethod
-    def get_members(cls, gp):
-        l = gp.members.all()
-        return [i.serializer_2() for i in l]
-
-
-# class GroupMember(models.Model):
-#     group = models.ForeignKey(Group, models.CASCADE)
-#     account = models.ForeignKey(Account, models.CASCADE)
-#
-#     @classmethod
-#     def add_member(cls, group, account):
-#         gm = GroupMember(group=group, account=account)
-#         gm.save()
-
-
-class GroupForm(forms.Form):
-    group_name = forms.CharField(label='Group name', max_length=100)
-
-# class InvitationRequest(models.Model):
-#     source_account = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     invited_account = models.ForeignKey(Account, on_delete=models.CASCADE)

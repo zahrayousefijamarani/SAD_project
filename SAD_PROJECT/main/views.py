@@ -7,7 +7,8 @@ from django.template import loader
 from django.urls import reverse
 
 from .forms import NewUserForm
-from .models import Account, Contact, GroupForm, Group, Expense
+from .models import Account, Contact, Expense
+from group.models import Group, GroupForm
 
 
 def register_request(request):
