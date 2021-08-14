@@ -18,3 +18,11 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class AddCustomInfo(forms.Form):
+    # phone_number = forms.RegexField(regex=r'^\+?1?\d{9,15}$',error_messages="Wrong phone number format.")
+    address = forms.CharField(max_length=50)
+    city = forms.CharField(max_length=60, label="Tehran")
+    state = forms.CharField(max_length=30, label="Tehran")
+    country = forms.CharField(max_length=50, label="Iran")

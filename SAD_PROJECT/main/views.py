@@ -6,8 +6,10 @@ from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
+from group.models import Group, GroupForm
+from utils.email_service import send_email
 from .forms import NewUserForm
-from .models import Account, Contact, GroupForm, Group, Expense
+from .models import Account, Contact, Expense
 
 
 def register_request(request):
@@ -156,3 +158,8 @@ def all_expenses(request):
 def pay(request, cost_id):
     # pay this cost id form wallet and add to receiver
     pass
+
+
+def sendmail(request):
+    send_email()
+    return redirect("main:homepage")
