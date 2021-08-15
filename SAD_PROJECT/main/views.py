@@ -9,7 +9,7 @@ from django.urls import reverse
 from group.models import Group, GroupForm
 from utils.email_service import send_email
 from .forms import NewUserForm
-from .models import Account, Contact, Expense
+from .models import Account, Contact, Expense, EditForm, Address
 
 
 def register_request(request):
@@ -106,12 +106,11 @@ def done_group_member_request(request, group_id):
         print(acc.user.email)
         print('click http://127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id))
         print("----------------")
-        # result = EmailSender().send_email([acc.user.email],
-        #                                   'Inviting Group',
-        #                                   'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id),
-        #                                   'main/home.html',
-        #                                   'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id))
-        # print(result)
+        result = send_email('Inviting Group',
+                            'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id),
+                            [acc.user.email]
+                            )
+        print(result)
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))
 
 
@@ -163,3 +162,24 @@ def pay(request, cost_id):
 def sendmail(request):
     send_email()
     return redirect("main:homepage")
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditForm(request.POST)
+        if form.is_valid():
+            addr = form.cleaned_data['address']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            country = form.cleaned_data['country']
+            phone_number = form.cleaned_data['phone_number']
+            my_user = Account.get_account_by_user(request.user.id)
+            my_user.phone_number = phone_number
+            a = Address(address=addr, city=city, state=state, country=country)
+            a.save()
+            my_user.address = a
+            my_user.save()
+            return redirect("main:homepage")
+    else:
+        form = EditForm()
+    return render(request, 'main/edit_profile.html', {'form': form})

@@ -3,6 +3,7 @@ import string
 
 from django.contrib.auth.models import User
 from django.db import models
+from django import forms
 
 ID_FIELD_LENGTH = 16
 alphabet = string.ascii_lowercase + string.digits
@@ -42,7 +43,7 @@ class Address(models.Model):
 
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     phone_number = models.CharField(max_length=17, blank=True)
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
     access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
@@ -60,7 +61,8 @@ class Account(models.Model):
     def serializer(self, random_key=None):
 
         return {
-            'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit
+            'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit,
+            'phone_number': self.phone_number
         }
 
     def serializer_2(self):
@@ -133,3 +135,11 @@ class Contact(models.Model):
             return []
         list_of_contacts = Contact.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
+
+
+class EditForm(forms.Form):
+    address = forms.CharField(label='address', max_length=100)
+    city = forms.CharField(label='city', max_length=60)
+    state = forms.CharField(label='state', max_length=30)
+    country = forms.CharField(label='country', max_length=50)
+    phone_number = forms.CharField(label='phone number', max_length=17)

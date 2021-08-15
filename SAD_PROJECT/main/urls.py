@@ -18,6 +18,7 @@ urlpatterns = [
     path("show_group/<int:group_id>/", views.show_group_request, name="show_group"),
     path("add_contact/", views.add_contact_request, name="add_contact"),
     path("expenses/", views.all_expenses, name="expenses"),
-    path("pay/<int:cost_id/", views.pay, name='pay'),
+    path("pay/<int:cost_id>/", views.pay, name='pay'),
+    path("edit/", views.edit_profile, name='edit_profile'),
     path("sendmail",views.sendmail)
 ]
