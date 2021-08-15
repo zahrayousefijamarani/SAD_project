@@ -67,7 +67,7 @@ class Account(models.Model):
 
     def serializer_2(self):
         return {
-            'id': self.user.pk, 'name': self.user.username}
+            'id': self.user.pk, 'name': self.user.username,'email': self.user.email, }
 
     def save(self, *args, **kwargs):
         if not self.uid:

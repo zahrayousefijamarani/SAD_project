@@ -7,9 +7,13 @@ from django.template import loader
 from django.urls import reverse
 
 from group.models import Group, GroupForm
-from utils.email_service import send_email
 from .forms import NewUserForm
 from .models import Account, Contact, Expense, EditForm, Address
+from django.core.mail import send_mail
+
+from django.core.mail import send_mail
+
+from SAD_PROJECT import settings
 
 
 def register_request(request):
@@ -106,10 +110,11 @@ def done_group_member_request(request, group_id):
         print(acc.user.email)
         print('click http://127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id))
         print("----------------")
-        result = send_email('Inviting Group',
-                            'click 127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id),
-                            [acc.user.email]
-                            )
+        result = send_mail('Inviting Group',
+                           'click http://127.0.0.1:8000/accept_gp/' + str(group_id) + '/' + str(acc.user.id),
+                           settings.EMAIL_HOST_USER,
+                           [acc.user.email]
+                           )
         print(result)
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))
 
@@ -160,7 +165,7 @@ def pay(request, cost_id):
 
 
 def sendmail(request):
-    send_email()
+    # send_email()
     return redirect("main:homepage")
 
 
