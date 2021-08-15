@@ -67,7 +67,7 @@ class Account(models.Model):
 
     def serializer_2(self):
         return {
-            'id': self.user.pk, 'name': self.user.username,'email': self.user.email, }
+            'id': self.user.pk, 'name': self.user.username, 'email': self.user.email, }
 
     def save(self, *args, **kwargs):
         if not self.uid:
@@ -143,3 +143,12 @@ class EditForm(forms.Form):
     state = forms.CharField(label='state', max_length=30)
     country = forms.CharField(label='country', max_length=50)
     phone_number = forms.CharField(label='phone number', max_length=17)
+
+
+class ShareForm(forms.Form):
+    address = forms.CharField(label='address', max_length=100)
+    city = forms.CharField(label='city', max_length=60)
+    state = forms.CharField(label='state', max_length=30)
+    country = forms.CharField(label='country', max_length=50)
+    date = forms.DateField(label='Date')
+    image = forms.ImageField(label='image')

@@ -20,6 +20,8 @@ function drop(ev) {
 }
 
 
+
+
     </script>
     <style>
         body {
@@ -59,6 +61,8 @@ function drop(ev) {
 
 
 
+
+
     </style>
 </head>
 <body>
@@ -67,7 +71,9 @@ function drop(ev) {
 <div class="split left">
     <ul class="w3-ul w3-card-4">
         <li class="w3-bar">
-            <span>Members</span>
+            <a href="/add_group_member/{{group_id}}">
+                <span>Members</span>
+            </a>
         </li>
     </ul>
     <div class="w3-container">
@@ -87,7 +93,9 @@ function drop(ev) {
 <div class="split right">
     <ul class="w3-ul w3-card-4">
         <li style="background-color: rgba(225, 225, 225, 0.5);" class="w3-bar">
-            <span>Share</span>
+            <a href="/add_share/{{group_id}}/">
+                <span>Share</span>
+            </a>
         </li>
     </ul>
 </div>

@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from group.models import Group, GroupForm
 from .forms import NewUserForm
-from .models import Account, Contact, Expense, EditForm, Address
+from .models import Account, Contact, Expense, EditForm, Address, ShareForm
 from django.core.mail import send_mail
 
 from django.core.mail import send_mail
@@ -136,7 +136,7 @@ def add_group_request(request):  # send a form
 def show_group_request(request, group_id):
     template = loader.get_template('main/specific_group.html')
     gp = Group.get_group(group_id)
-    context = {'members': gp.get_members(gp)}
+    context = {'members': gp.get_members(gp), 'group_id': group_id}
     return HttpResponse(template.render(context, request))
 
 
@@ -188,3 +188,18 @@ def edit_profile(request):
     else:
         form = EditForm()
     return render(request, 'main/edit_profile.html', {'form': form})
+
+
+def add_share(request, group_id):
+    if request.method == 'POST':
+        form = ShareForm(request.POST)
+        if form.is_valid():
+            # make share object and then call add_share_member/<int:group_id>/<int:share_id>/
+            pass
+    else:
+        form = ShareForm()
+    return render(request, 'main/add_share.html', {'form': form})
+
+
+def add_share_member(request, group_id, share_id):
+    pass
