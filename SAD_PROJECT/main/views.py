@@ -202,4 +202,4 @@ def add_share(request, group_id):
 
 
 def add_share_member(request, group_id, share_id):
-    pass
+    return render(request, 'main/share_member.html', {'users': [{'name': 'a'}, {'name': 'aa'}]})
