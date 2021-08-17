@@ -151,7 +151,7 @@ class Share(models.Model):
 
     def serializer(self):
         return {
-            'date': self.date, 'address': self.address.address
+            'date': self.date, 'address': self.address.address, 'id': self.pk
         }
 
     @staticmethod
