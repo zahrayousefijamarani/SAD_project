@@ -112,13 +112,6 @@ class Expense(models.Model):
         return [i.serializer() for i in l]
 
 
-class Share(models.Model):
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
-    date = models.DateField()
-    image = models.ImageField()
-    accounts = models.ManyToManyField(Account)
-
-
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
     contact_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=False)
@@ -144,18 +137,36 @@ class Contact(models.Model):
         return [i.serializer() for i in list_of_contacts]
 
 
-class EditForm(forms.Form):
-    address = forms.CharField(label='address', max_length=100)
-    city = forms.CharField(label='city', max_length=60)
-    state = forms.CharField(label='state', max_length=30)
-    country = forms.CharField(label='country', max_length=50)
-    phone_number = forms.CharField(label='phone number', max_length=17)
+class AccPer(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    percent = models.IntegerField()
 
 
-class ShareForm(forms.Form):
-    address = forms.CharField(label='address', max_length=100)
-    city = forms.CharField(label='city', max_length=60)
-    state = forms.CharField(label='state', max_length=30)
-    country = forms.CharField(label='country', max_length=50)
-    date = forms.DateField(label='Date')
-    image = forms.ImageField(label='image')
+class Share(models.Model):
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
+    date = models.DateField()
+    image = models.ImageField(null=True, blank=True)
+    accPers = models.ManyToManyField(AccPer)
+    group_id = models.IntegerField(default=0)
+
+    def serializer(self):
+        return {
+            'date': self.date, 'address': self.address.address
+        }
+
+    @staticmethod
+    def get_share_by_id(id):
+        return Share.objects.get(pk=id)
+
+    @staticmethod
+    def add_shares(id, account, percent):
+        s = Share.get_share_by_id(id)
+        a = AccPer(account=account, percent=percent)
+        a.save()
+        s.accPers.add(a)
+        s.save()
+
+    @staticmethod
+    def get_shares_for_gp(gp_id):
+        a = Share.objects.filter(group_id=gp_id)
+        return [i.serializer() for i in a]

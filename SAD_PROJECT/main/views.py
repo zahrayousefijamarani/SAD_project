@@ -7,8 +7,8 @@ from django.template import loader
 from django.urls import reverse
 
 from group.models import Group, GroupForm
-from .forms import NewUserForm
-from .models import Account, Contact, Expense, EditForm, Address, ShareForm, Share
+from .forms import NewUserForm, ShareForm, EditForm
+from .models import Account, Contact, Expense, Address, Share
 from django.core.mail import send_mail
 
 from django.core.mail import send_mail
@@ -136,7 +136,8 @@ def add_group_request(request):  # send a form
 def show_group_request(request, group_id):
     template = loader.get_template('main/specific_group.html')
     gp = Group.get_group(group_id)
-    context = {'members': gp.get_members(gp), 'group_id': group_id, 'shares': []}  # todo add shares
+    context = {'members': gp.get_members(gp), 'group_id': group_id,
+               'shares': Share.get_shares_for_gp(group_id)}
     return HttpResponse(template.render(context, request))
 
 
@@ -200,9 +201,9 @@ def add_share(request, group_id):
             country = form.cleaned_data['country']
             a = Address(address=addr, city=city, state=state, country=country)
             a.save()
-            image = form.cleaned_data['image']
+            image = form.cleaned_data.get('image')
             date = form.cleaned_data['date']
-            share = Share(date=date, address=a, image=image)
+            share = Share(date=date, address=a, image=image, group_id= group_id)
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:
@@ -214,13 +215,22 @@ def add_share(request, group_id):
 
 
 def add_share_member(request, group_id, share_id):
-    # add the account to share with share_id #todo
+    if request.method == 'POST':
+        acc_id = request.POST['accounts']
+        percent = request.POST['percent']
+        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent)
+    gp = Group.get_group(group_id)
     return render(request, 'main/share_member.html',
-                  {'users': [{'name': 'a'}, {'name': 'aa'}],
+                  {'users': gp.get_members(gp),
                    'group_id': group_id,
                    'share_id': share_id
                    })
 
 
-def end_share_member(request, group_id):
+def end_share_member(request, group_id, share_id):
+    if request.method == 'POST':
+        acc_id = request.POST['accounts']
+        percent = request.POST['percent']
+        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent)
+    # todo add to expenses
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))
