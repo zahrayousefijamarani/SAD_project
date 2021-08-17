@@ -112,6 +112,13 @@ class Expense(models.Model):
         return [i.serializer() for i in l]
 
 
+class Share(models.Model):
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
+    date = models.DateField()
+    image = models.ImageField()
+    accounts = models.ManyToManyField(Account)
+
+
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
     contact_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=False)

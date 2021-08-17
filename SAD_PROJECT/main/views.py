@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from group.models import Group, GroupForm
 from .forms import NewUserForm
-from .models import Account, Contact, Expense, EditForm, Address, ShareForm
+from .models import Account, Contact, Expense, EditForm, Address, ShareForm, Share
 from django.core.mail import send_mail
 
 from django.core.mail import send_mail
@@ -136,7 +136,7 @@ def add_group_request(request):  # send a form
 def show_group_request(request, group_id):
     template = loader.get_template('main/specific_group.html')
     gp = Group.get_group(group_id)
-    context = {'members': gp.get_members(gp), 'group_id': group_id}
+    context = {'members': gp.get_members(gp), 'group_id': group_id, 'shares': []}  # todo add shares
     return HttpResponse(template.render(context, request))
 
 
@@ -194,19 +194,27 @@ def add_share(request, group_id):
     if request.method == 'POST':
         form = ShareForm(request.POST)
         if form.is_valid():
-            # make share object and then call add_share_member/<int:group_id>/<int:share_id>/
-            pass
+            addr = form.cleaned_data['address']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            country = form.cleaned_data['country']
+            a = Address(address=addr, city=city, state=state, country=country)
+            a.save()
+            image = form.cleaned_data['image']
+            date = form.cleaned_data['date']
+            share = Share(date=date, address=a, image=image)
+            share.save()
+            return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:
         form = ShareForm()
-    share_id = 1  # ---------------------- make a share class and send its PK
     return render(request, 'main/add_share.html', {
         'form': form,
-        'group_id': group_id,
-        'share_id': share_id
+        'group_id': group_id
     })
 
 
 def add_share_member(request, group_id, share_id):
+    # add the account to share with share_id #todo
     return render(request, 'main/share_member.html',
                   {'users': [{'name': 'a'}, {'name': 'aa'}],
                    'group_id': group_id,
@@ -214,5 +222,5 @@ def add_share_member(request, group_id, share_id):
                    })
 
 
-def end_share_member(request, group_id, share_id):
-    pass
+def end_share_member(request, group_id):
+    return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))

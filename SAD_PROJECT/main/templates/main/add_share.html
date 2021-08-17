@@ -265,6 +265,7 @@ input[type=submit]:active {
 }
 
 
+
     </style>
 </head>
 <body>
@@ -312,7 +313,7 @@ input[type=submit]:active {
             <div class="formbg-outer">
                 <div class="formbg">
                     <div class="formbg-inner padding-horizontal--48">
-                        <form action="/add_share_member/{{group_id}}/{{share_id}}/" id="stripe-login" method="post">
+                        <form action="/add_share/{{group_id}}" id="stripe-login" method="post">
                             {% csrf_token %}
                             {{ form }}
                             <p class="submit"><input type="submit" name="edit" value="Edit"></p>

@@ -345,7 +345,7 @@ a.ssolink {
             <div class="formbg-outer">
                 <div class="formbg">
                     <div class="formbg-inner padding-horizontal--48">
-                        <form action="/end_share_member/{{group_id}}/{{share_id}}/" method="post">
+                        <form action="/end_share_member/{{group_id}}/" method="post">
                             {% csrf_token %}
                             <select name="accounts" id="accounts" class="dropdown">
                                 {% for c in users %}
