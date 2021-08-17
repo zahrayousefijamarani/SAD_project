@@ -21,10 +21,10 @@ ol.gradient-list > li::before, ol.gradient-list > li {
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  padding: 0;
 }
 
 body {
@@ -33,6 +33,10 @@ body {
   background-attachment: fixed;
   color: #1d1f20;
   font-family: "Raleway", sans-serif;
+  width:100%;
+  height:100%;
+  margin: 0;
+  padding: 0;
 }
 
 main {
@@ -138,20 +142,96 @@ ol.gradient-list > li + li {
   color: white;
 }
 
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  background-color: rgba(0, 0, 100, 0.5);
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+
+.my_div {
+  width: 100%;
+  height : 100%;
+}
+
+
+.class1{
+ width: 33%;
+    height: 100%;
+    float: left;  background-color: rgba(100, 0, 0, 0.4);
+}
+.class2{
+
+  background-color: rgba(0, 0, 100, 0.4);
+    width: 33.33%;
+    height: 100%;
+    float: left;
+
+}
+.class3 {
+  background-color: rgba(0, 100, 0, 0.4);
+ width: 33.66%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+
 
     </style>
 </head>
 <body>
 {% block content %}
-<main>
-    <ol class="gradient-list">
-        {% for e in expenses %}
-        <li>
-           {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
-        </li>
-        {% endfor %}
-    </ol>
-</main>
+<div class="my_div">
+    <div class="class1">
+        <ol class="gradient-list">
+            {% for e in payed %}
+            <li>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="class2">
+        <ol class="gradient-list">
+            {% for e in not_payed %}
+            <li>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="class3">
+        <ol class="gradient-list">
+            {% for e in friend_not_payed %}
+            <li>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
 {% endblock %}
 </body>
 </html>

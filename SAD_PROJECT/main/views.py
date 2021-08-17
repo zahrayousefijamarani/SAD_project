@@ -156,7 +156,9 @@ def homepage(request):
 def all_expenses(request):
     template = loader.get_template('main/expenses.html')
     acc = Account.get_account_by_user(request.user.id)
-    context = {'expenses': Expense.get_all_expenses(acc)}
+    context = {'payed': Expense.get_payed_expenses(acc),
+               'not_payed': Expense.get_not_payed_expenses(acc),
+               'friend_not_payed': Expense.get_friend_not_payed_expenses(acc)}
     return HttpResponse(template.render(context, request))
 
 

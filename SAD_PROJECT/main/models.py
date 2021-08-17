@@ -115,6 +115,26 @@ class Expense(models.Model):
         l = Expense.objects.filter(debtor=debtor)
         return [i.serializer() for i in l]
 
+    @staticmethod
+    def get_payed_expenses(debtor):
+        l = Expense.objects.filter(debtor=debtor, payed=True)
+        return [i.serializer() for i in l]
+
+    @staticmethod
+    def get_not_payed_expenses(debtor):
+        l = Expense.objects.filter(debtor=debtor, payed=False)
+        return [i.serializer() for i in l]
+
+    @staticmethod
+    def get_friend_not_payed_expenses(account):
+        contacts = Contact.objects.filter(account=account)
+        e = []
+        for c in contacts:
+            c_e = Expense.get_not_payed_expenses(c.contact_account)
+            for ex in c_e:
+                e.append(ex)
+        return [i.serializer() for i in e]
+
 
 class Contact(models.Model):
     account = models.ForeignKey(Account, related_name="contacts", on_delete=models.CASCADE, null=False)
