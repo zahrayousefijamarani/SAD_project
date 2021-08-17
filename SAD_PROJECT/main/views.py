@@ -198,8 +198,21 @@ def add_share(request, group_id):
             pass
     else:
         form = ShareForm()
-    return render(request, 'main/add_share.html', {'form': form})
+    share_id = 1  # ---------------------- make a share class and send its PK
+    return render(request, 'main/add_share.html', {
+        'form': form,
+        'group_id': group_id,
+        'share_id': share_id
+    })
 
 
 def add_share_member(request, group_id, share_id):
-    return render(request, 'main/share_member.html', {'users': [{'name': 'a'}, {'name': 'aa'}]})
+    return render(request, 'main/share_member.html',
+                  {'users': [{'name': 'a'}, {'name': 'aa'}],
+                   'group_id': group_id,
+                   'share_id': share_id
+                   })
+
+
+def end_share_member(request, group_id, share_id):
+    pass

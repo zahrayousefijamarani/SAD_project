@@ -264,6 +264,7 @@ input[type=submit]:active {
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
+
     </style>
 </head>
 <body>
@@ -311,7 +312,7 @@ input[type=submit]:active {
             <div class="formbg-outer">
                 <div class="formbg">
                     <div class="formbg-inner padding-horizontal--48">
-                        <form action="" id="stripe-login" method="post">
+                        <form action="/add_share_member/{{group_id}}/{{share_id}}/" id="stripe-login" method="post">
                             {% csrf_token %}
                             {{ form }}
                             <p class="submit"><input type="submit" name="edit" value="Edit"></p>

@@ -241,9 +241,17 @@ a.ssolink {
 /*Dropdown*/
 .dropdown {
   margin: 10px auto;
-  width: 300px;
+  width: 100%;
   height:30px;
   border: 0.1em solid #c0cdd1;
+}
+
+.my_div{
+    width:100%;
+    align-items: center;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
 }
 
 
@@ -263,7 +271,6 @@ a.ssolink {
 .button1 {
   background-color: white;
   color: black;
-  margin: 4px 60px 4px 4px;
   border: 2px solid #4CAF50;
 }
 
@@ -275,7 +282,6 @@ a.ssolink {
 .button2 {
   background-color: white;
   color: black;
-  margin: 4px 4px 4px 60px;
   border: 2px solid #008CBA;
 }
 
@@ -283,6 +289,11 @@ a.ssolink {
   background-color: #008CBA;
   color: white;
 }
+
+
+
+
+
 
 
     </style>
@@ -334,15 +345,22 @@ a.ssolink {
             <div class="formbg-outer">
                 <div class="formbg">
                     <div class="formbg-inner padding-horizontal--48">
-                        <select name="accounts" id="accounts" class="dropdown">
-                            {% for c in users %}
+                        <form action="/end_share_member/{{group_id}}/{{share_id}}/" method="post">
+                            {% csrf_token %}
+                            <select name="accounts" id="accounts" class="dropdown">
+                                {% for c in users %}
                                 <option value="{{ c.name }}">{{ c.name }}</option>
                                 {% endfor %}
-                        </select>
-                        <input >
+                            </select>
+                            <input name="percent" class="dropdown" id="percent" placeholder="Enter percent">
+                            <div class="my_div">
+                                <button type="submit" class="button button1">Done</button>
+                                <button type="submit" class="button button2"
+                                        formaction="/add_share_member/{{group_id}}/{{share_id}}/">Next
+                                </button>
+                            </div>
 
-                        <button class="button button1"><a>Done</a></button>
-                        <button class="button button2"><a href="">Next</a></button>
+                        </form>
                     </div>
                 </div>
             </div>
