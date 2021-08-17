@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Expenses</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         /*** FONTS ***/
 @import url(https://fonts.googleapis.com/css?family=Montserrat:900|Raleway:400,400i,700,700i);
@@ -199,21 +200,32 @@ ol.gradient-list > li + li {
 }
 
 
+
     </style>
 </head>
 <body>
 {% block content %}
 <div class="my_div">
     <div class="class1">
+        <ul class="w3-ul w3-card-4">
+            <li class="w3-bar">
+                    <span>My Payed Expenses</span>
+            </li>
+        </ul>
         <ol class="gradient-list">
             {% for e in payed %}
             <li>
-                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; {{e.cost}}$
             </li>
             {% endfor %}
         </ol>
     </div>
     <div class="class2">
+        <ul class="w3-ul w3-card-4">
+            <li class="w3-bar">
+                    <span>My Not Payed Expenses</span>
+            </li>
+        </ul>
         <ol class="gradient-list">
             {% for e in not_payed %}
             <li>
@@ -223,6 +235,11 @@ ol.gradient-list > li + li {
         </ol>
     </div>
     <div class="class3">
+        <ul class="w3-ul w3-card-4">
+            <li class="w3-bar">
+                    <span>My Friends not payed Expenses</span>
+            </li>
+        </ul>
         <ol class="gradient-list">
             {% for e in friend_not_payed %}
             <li>
