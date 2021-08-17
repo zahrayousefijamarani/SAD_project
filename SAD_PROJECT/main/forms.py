@@ -43,3 +43,7 @@ class ShareForm(forms.Form):
     country = forms.CharField(label='country', max_length=50)
     date = forms.DateField(label='Date', widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     image = forms.ImageField(label='image', required=False)
+    creditor = forms.ChoiceField(choices=(), label='creditor')
+
+    def edit(self, my_choices):
+        self.fields['creditor'].choices = my_choices

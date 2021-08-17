@@ -192,8 +192,10 @@ def edit_profile(request):
 
 
 def add_share(request, group_id):
+    gp = Group.get_group(group_id)
     if request.method == 'POST':
         form = ShareForm(request.POST)
+        form.edit(my_choices=gp.get_members(gp, True))
         if form.is_valid():
             addr = form.cleaned_data['address']
             city = form.cleaned_data['city']
@@ -203,11 +205,14 @@ def add_share(request, group_id):
             a.save()
             image = form.cleaned_data.get('image')
             date = form.cleaned_data['date']
-            share = Share(date=date, address=a, image=image, group_id= group_id)
+            c_id = form.cleaned_data['creditor']
+            print(c_id)
+            share = Share(date=date, address=a, image=image, group_id=group_id, creditor= Account.get_account_by_user(c_id))
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:
         form = ShareForm()
+        form.edit(my_choices=gp.get_members(gp, True))
     return render(request, 'main/add_share.html', {
         'form': form,
         'group_id': group_id

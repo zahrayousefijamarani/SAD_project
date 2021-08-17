@@ -69,6 +69,9 @@ class Account(models.Model):
         return {
             'id': self.user.pk, 'name': self.user.username, 'email': self.user.email, }
 
+    def serializer_3(self):
+        return (self.user.pk, self.user.username)
+
     def save(self, *args, **kwargs):
         if not self.uid:
             self.uid = Account.generate_uid()
@@ -99,6 +102,7 @@ class Expense(models.Model):
     creditor = models.ForeignKey(Account, related_name="creditor", on_delete=models.CASCADE, null=False)
     amount = models.IntegerField()
     description = models.CharField(max_length=300)
+    payed = models.BooleanField(default=False)
 
     def serializer(self):
         return {
@@ -148,6 +152,7 @@ class Share(models.Model):
     image = models.ImageField(null=True, blank=True)
     accPers = models.ManyToManyField(AccPer)
     group_id = models.IntegerField(default=0)
+    creditor = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def serializer(self):
         return {

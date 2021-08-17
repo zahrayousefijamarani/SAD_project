@@ -58,9 +58,11 @@ class Group(models.Model):
         return [i.serializer() for i in choosen]
 
     @classmethod
-    def get_members(cls, gp):
+    def get_members(cls, gp, is_3=False):
         l = gp.members.all()
-        return [i.serializer_2() for i in l]
+        if not is_3:
+            return [i.serializer_2() for i in l]
+        return [i.serializer_3() for i in l]
 
 
 class GroupMember(models.Model):
