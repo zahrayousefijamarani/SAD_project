@@ -106,7 +106,7 @@ class Share(models.Model):
     date = models.DateField()
     image = models.ImageField(null=True, blank=True)
     accPers = models.ManyToManyField(AccPer)
-    credit = models.DecimalField(null=False, decimal_places=2)
+    credit = models.DecimalField(null=False, decimal_places=2, max_digits=20, default="0.0")
     group_id = models.IntegerField(default=0)
     creditor = models.ForeignKey(Account, on_delete=models.CASCADE)
 
@@ -143,7 +143,7 @@ class Expense(models.Model):
     debtor = models.ForeignKey(Account, related_name="debtor", on_delete=models.CASCADE, null=False)
     creditor = models.ForeignKey(Account, related_name="creditor", on_delete=models.CASCADE, null=False)
     share = models.ForeignKey(Share, on_delete=models.CASCADE, null=True)
-    amount = models.DecimalField(decimal_places=2)
+    amount = models.DecimalField(decimal_places=2, max_digits=20)
     description = models.CharField(max_length=300)
     payed = models.BooleanField(default=False)
 
