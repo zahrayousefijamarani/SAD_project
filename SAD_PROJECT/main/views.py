@@ -1,19 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse
 
+from SAD_PROJECT import settings
 from group.models import Group, GroupForm
 from .forms import NewUserForm, ShareForm, EditForm
 from .models import Account, Contact, Expense, Address, Share
-from django.core.mail import send_mail
-
-from django.core.mail import send_mail
-
-from SAD_PROJECT import settings
 
 
 def register_request(request):
@@ -165,6 +162,10 @@ def homepage(request):
     else:
         template = loader.get_template('main/home.html')
         acc = Account.get_account_by_user(request.user.id)
+        if acc.is_admin:
+            pass
+        else:
+            pass
         context = acc.serializer()
         return HttpResponse(template.render(context, request))
 
@@ -179,12 +180,16 @@ def all_expenses(request):
 
 
 def pay(request, cost_id):
-    print("ddd")
-    err = Expense.pay_expenses(cost_id)
-    print(err)
-    if err is None:
-        return HttpResponseRedirect(reverse('main:homepage'))
-    return HttpResponseRedirect(reverse('main:homepage'))
+    if not request.user.is_authenticated:
+        template = loader.get_template('main/index.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
+    else:
+        acc = Account.get_account_by_user(request.user.id)
+        err = Expense.pay_expenses(cost_id, acc)
+        if err is None:
+            return HttpResponseRedirect(reverse('main:expenses'))
+        return HttpResponseRedirect(reverse('main:expenses'))
 
 
 def edit_profile(request):

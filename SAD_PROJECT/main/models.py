@@ -42,6 +42,7 @@ class Address(models.Model):
 
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_admin = models.BooleanField(default=False)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     phone_number = models.CharField(max_length=17, blank=True)
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
@@ -146,6 +147,7 @@ class Expense(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=20)
     description = models.CharField(max_length=300)
     payed = models.BooleanField(default=False)
+    payer = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
 
     def serializer(self):
         return {
@@ -155,14 +157,22 @@ class Expense(models.Model):
         }
 
     @staticmethod
-    def pay_expenses(expense_id):
+    def pay_expenses(expense_id, payer):
         e = Expense.objects.get(pk=expense_id)
         if e is None:
             return "Expense does not exist."
         if not e.payed:
             e.payed = True
-            e.debtor.wallet.credit -= e.amount
-            e.creditor.wallet.credit += e.amount
+            e.payer = payer
+            creditor_wallet = e.creditor.wallet
+            payer_wallet = payer.wallet
+
+            payer_wallet.credit -= e.amount
+            payer_wallet.save()
+
+            creditor_wallet.credit += e.amount
+            creditor_wallet.save()
+
             e.save()
             return None
         return "Already payed."
