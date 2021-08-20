@@ -43,14 +43,15 @@ class TransactionForm(forms.Form):
 
 
 class ShareForm(forms.Form):
+    name = forms.CharField(label='name', max_length=100)
+    creditor = forms.ChoiceField(choices=(), label='creditor')
+    credit = forms.DecimalField(decimal_places=2, max_digits=20, label='Credit')
     address = forms.CharField(label='address', max_length=100)
     city = forms.CharField(label='city', max_length=60)
     state = forms.CharField(label='state', max_length=30)
     country = forms.CharField(label='country', max_length=50)
     date = forms.DateField(label='Date', widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     image = forms.ImageField(label='image', required=False)
-    creditor = forms.ChoiceField(choices=(), label='creditor')
-    credit = forms.DecimalField(decimal_places=2, max_digits=20, label='Credit')
 
     def edit(self, my_choices):
         self.fields['creditor'].choices = my_choices

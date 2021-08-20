@@ -219,6 +219,7 @@ def add_share(request, group_id):
         form = ShareForm(request.POST)
         form.edit(my_choices=gp.get_members(gp, True))
         if form.is_valid():
+            name = form.cleaned_data['name']
             addr = form.cleaned_data['address']
             city = form.cleaned_data['city']
             state = form.cleaned_data['state']
@@ -230,7 +231,7 @@ def add_share(request, group_id):
             date = form.cleaned_data['date']
             c_id = form.cleaned_data['creditor']
             print(c_id)
-            share = Share(date=date, address=a, image=image, credit=credit, group_id=group_id,
+            share = Share(name=name, date=date, address=a, image=image, credit=credit, group_id=group_id,
                           creditor=Account.get_account_by_user(c_id))
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))

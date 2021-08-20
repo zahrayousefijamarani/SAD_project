@@ -103,6 +103,7 @@ class AccPer(models.Model):
 
 
 class Share(models.Model):
+    name = models.CharField(max_length=100, default="share")
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     date = models.DateField()
     image = models.ImageField(null=True, blank=True)
@@ -118,6 +119,8 @@ class Share(models.Model):
 
     def build_expenses(self):
         for accper in self.accPers.all():
+            if self.creditor == accper.account:
+                continue
             e = Expense(creditor=self.creditor, share=self, debtor=accper.account, description=self.address)
             e.amount = (self.credit * accper.percent) / 100
             e.save()
