@@ -36,6 +36,12 @@ class EditForm(forms.Form):
     phone_number = forms.CharField(label='phone number', max_length=17)
 
 
+class TransactionForm(forms.Form):
+    cash_amount = forms.DecimalField(decimal_places=2, max_digits=20, label='Credit')
+    date = forms.DateField(label='Date', widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    description = forms.CharField(label='description', max_length=100)
+
+
 class ShareForm(forms.Form):
     address = forms.CharField(label='address', max_length=100)
     city = forms.CharField(label='city', max_length=60)

@@ -179,7 +179,6 @@ def all_expenses(request):
 
 
 def pay(request, cost_id):
-    # pay this cost id form wallet and add to receiver
     err = Expense.pay_expenses(cost_id)
     if err is None:
         return HttpResponseRedirect(reverse('main:show_group'))

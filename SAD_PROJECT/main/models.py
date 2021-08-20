@@ -18,7 +18,7 @@ def random_id(length):
 
 # Create your models here
 class Wallet(models.Model):
-    credit = models.CharField(max_length=10, default=0)
+    credit = models.DecimalField(null=False, decimal_places=2, max_digits=20, default="0.00")
 
 
 class Transaction(models.Model):
@@ -69,7 +69,7 @@ class Account(models.Model):
             'id': self.user.pk, 'name': self.user.username, 'email': self.user.email, }
 
     def serializer_3(self):
-        return (self.user.pk, self.user.username)
+        return self.user.pk, self.user.username
 
     def save(self, *args, **kwargs):
         if not self.uid:
@@ -160,6 +160,8 @@ class Expense(models.Model):
             return "Expense does not exist."
         if not e.payed:
             e.payed = True
+            e.debtor.wallet.credit -= e.amount
+            e.creditor.wallet.credit += e.amount
             return None
         return "Already payed."
 
