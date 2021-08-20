@@ -179,10 +179,12 @@ def all_expenses(request):
 
 
 def pay(request, cost_id):
+    print("ddd")
     err = Expense.pay_expenses(cost_id)
+    print(err)
     if err is None:
-        return HttpResponseRedirect(reverse('main:show_group'))
-    return HttpResponseRedirect(reverse('main:show_group'))
+        return HttpResponseRedirect(reverse('main:homepage'))
+    return HttpResponseRedirect(reverse('main:homepage'))
 
 
 def edit_profile(request):

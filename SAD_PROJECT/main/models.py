@@ -150,7 +150,8 @@ class Expense(models.Model):
     def serializer(self):
         return {
             'cost': self.amount,
-            'description': self.description
+            'description': self.description,
+            'id': self.pk
         }
 
     @staticmethod
@@ -162,6 +163,7 @@ class Expense(models.Model):
             e.payed = True
             e.debtor.wallet.credit -= e.amount
             e.creditor.wallet.credit += e.amount
+            e.save()
             return None
         return "Already payed."
 

@@ -229,7 +229,7 @@ ol.gradient-list > li + li {
         <ol class="gradient-list">
             {% for e in not_payed %}
             <li>
-                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
             </li>
             {% endfor %}
         </ol>
@@ -243,7 +243,7 @@ ol.gradient-list > li + li {
         <ol class="gradient-list">
             {% for e in friend_not_payed %}
             <li>
-                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="">{{e.cost}}$ </a>
+                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
             </li>
             {% endfor %}
         </ol>
