@@ -20,7 +20,6 @@ urlpatterns = [
     path("expenses/", views.all_expenses, name="expenses"),
     path("pay/<int:cost_id>/", views.pay, name='pay'),
     path("edit/", views.edit_profile, name='edit_profile'),
-    path("sendmail", views.sendmail),
     path("add_share/<int:group_id>/", views.add_share, name='add_share'),
     path("add_share_member/<int:group_id>/<int:share_id>/", views.add_share_member, name='add_share_member'),
     path("end_share_member/<int:group_id>/<int:share_id>/", views.end_share_member, name='end_share'),

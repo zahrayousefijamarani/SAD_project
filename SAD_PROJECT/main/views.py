@@ -164,12 +164,10 @@ def all_expenses(request):
 
 def pay(request, cost_id):
     # pay this cost id form wallet and add to receiver
-    pass
-
-
-def sendmail(request):
-    # send_email()
-    return redirect("main:homepage")
+    err = Expense.pay_expenses(cost_id)
+    if err is None:
+        return HttpResponseRedirect(reverse('main:show_group'))
+    return HttpResponseRedirect(reverse('main:show_group'))
 
 
 def edit_profile(request):
@@ -239,5 +237,5 @@ def end_share_member(request, group_id, share_id):
         acc_id = request.POST['accounts']
         percent = request.POST['percent']
         Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent)
-    # todo add to expenses
+    Share.get_share_by_id(share_id).build_expenses()
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))

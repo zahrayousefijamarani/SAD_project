@@ -3,7 +3,6 @@ import string
 
 from django.contrib.auth.models import User
 from django.db import models
-from django import forms
 
 ID_FIELD_LENGTH = 16
 alphabet = string.ascii_lowercase + string.digits
@@ -97,10 +96,54 @@ class Account(models.Model):
         return [i.serializer_2() for i in l]
 
 
+class AccPer(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    percent = models.IntegerField()
+
+
+class Share(models.Model):
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
+    date = models.DateField()
+    image = models.ImageField(null=True, blank=True)
+    accPers = models.ManyToManyField(AccPer)
+    credit = models.DecimalField(null=False, decimal_places=2)
+    group_id = models.IntegerField(default=0)
+    creditor = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+    def serializer(self):
+        return {
+            'date': self.date, 'address': self.address.address, 'id': self.pk
+        }
+
+    def build_expenses(self):
+        for accper in self.accPers.all():
+            e = Expense(creditor=self.creditor, share=self, debtor=accper.account)
+            e.amount = (self.credit * accper.percent) / 100
+            e.save()
+
+    @staticmethod
+    def get_share_by_id(id):
+        return Share.objects.get(pk=id)
+
+    @staticmethod
+    def add_shares(id, account, percent):
+        s = Share.get_share_by_id(id)
+        a = AccPer(account=account, percent=percent)
+        a.save()
+        s.accPers.add(a)
+        s.save()
+
+    @staticmethod
+    def get_shares_for_gp(gp_id):
+        a = Share.objects.filter(group_id=gp_id)
+        return [i.serializer() for i in a]
+
+
 class Expense(models.Model):
     debtor = models.ForeignKey(Account, related_name="debtor", on_delete=models.CASCADE, null=False)
     creditor = models.ForeignKey(Account, related_name="creditor", on_delete=models.CASCADE, null=False)
-    amount = models.IntegerField()
+    share = models.ForeignKey(Share, on_delete=models.CASCADE, null=True)
+    amount = models.DecimalField(decimal_places=2)
     description = models.CharField(max_length=300)
     payed = models.BooleanField(default=False)
 
@@ -109,6 +152,16 @@ class Expense(models.Model):
             'cost': self.amount,
             'description': self.description
         }
+
+    @staticmethod
+    def pay_expenses(expense_id):
+        e = Expense.objects.get(pk=expense_id)
+        if e is None:
+            return "Expense does not exist."
+        if not e.payed:
+            e.payed = True
+            return None
+        return "Already payed."
 
     @staticmethod
     def get_all_expenses(debtor):
@@ -159,39 +212,3 @@ class Contact(models.Model):
             return []
         list_of_contacts = Contact.objects.filter(account=account)
         return [i.serializer() for i in list_of_contacts]
-
-
-class AccPer(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    percent = models.IntegerField()
-
-
-class Share(models.Model):
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
-    date = models.DateField()
-    image = models.ImageField(null=True, blank=True)
-    accPers = models.ManyToManyField(AccPer)
-    group_id = models.IntegerField(default=0)
-    creditor = models.ForeignKey(Account, on_delete=models.CASCADE)
-
-    def serializer(self):
-        return {
-            'date': self.date, 'address': self.address.address, 'id': self.pk
-        }
-
-    @staticmethod
-    def get_share_by_id(id):
-        return Share.objects.get(pk=id)
-
-    @staticmethod
-    def add_shares(id, account, percent):
-        s = Share.get_share_by_id(id)
-        a = AccPer(account=account, percent=percent)
-        a.save()
-        s.accPers.add(a)
-        s.save()
-
-    @staticmethod
-    def get_shares_for_gp(gp_id):
-        a = Share.objects.filter(group_id=gp_id)
-        return [i.serializer() for i in a]

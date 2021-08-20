@@ -5,19 +5,6 @@ from django.db import models
 from main.models import Account
 
 
-# class Group(models.Model):
-#     group_name = models.CharField(max_length=250)
-#     admin = models.ForeignKey(Account, on_delete=models.CASCADE)
-#
-#     @classmethod
-#     def create_group(cls, name, admin):
-#         if name == "" or admin is None:
-#             return
-#         g = Group(group_name=name, admin=admin)
-#         g.save()
-#
-#
-
 class Group(models.Model):
     group_name = models.CharField(max_length=250)
     admin = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admin_account")
