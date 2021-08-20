@@ -162,6 +162,7 @@ class Expense(models.Model):
             e.payed = True
             e.debtor.wallet.credit -= e.amount
             e.creditor.wallet.credit += e.amount
+            e.save()
             return None
         return "Already payed."
 
