@@ -62,11 +62,27 @@ def contact_request(request):
     return HttpResponse(template.render(context, request))
 
 
+def accept_contact(request, me, sec_id):
+    me = Account.get_account_by_user(me)
+    sec_user = Account.get_account_by_user(sec_id)
+    Contact.add_contact(me, sec_user)
+    return HttpResponseRedirect(reverse('main:homepage', args=()))
+
+
 def add_contact_request(request):  # send a form
     if request.method == "POST":
         checked_id = request.POST.getlist('tag')
         for id in checked_id:
-            Contact.add_contact(Account.get_account_by_user(request.user.id), Account.get_account_by_user(id))
+            me = Account.get_account_by_user(request.user.id)
+            sec_user = Account.get_account_by_user(id)
+            print('click http://127.0.0.1:8000/accept_contact/' + str(request.user.id) + '/' + str(id))
+            print("----------------")
+            result = send_mail('Contact with ' + me.user.username,
+                               'click http://127.0.0.1:8000/accept_contact/' + str(request.user.id) + '/' + str(id),
+                               settings.EMAIL_HOST_USER,
+                               [sec_user.user.email]
+                               )
+            print(result)
         return HttpResponseRedirect(reverse('main:contacts', args=()))
 
     else:

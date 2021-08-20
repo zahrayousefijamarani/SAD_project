@@ -205,6 +205,8 @@ class Contact(models.Model):
             return
         c = Contact(account=s, contact_account=d)
         c.save()
+        c = Contact(account=d, contact_account=s)
+        c.save()
 
     @classmethod
     def get_contacts(cls, account):
