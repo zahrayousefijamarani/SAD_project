@@ -11,6 +11,8 @@ from SAD_PROJECT import settings
 from group.models import Group, GroupForm
 from .forms import NewUserForm, ShareForm, EditForm
 from .models import Account, Contact, Expense, Address, Share
+from django.core.mail import send_mail
+
 
 
 def register_request(request):
@@ -162,12 +164,16 @@ def homepage(request):
     else:
         template = loader.get_template('main/home.html')
         acc = Account.get_account_by_user(request.user.id)
-        if acc.is_admin:
-            pass
-        else:
-            pass
         context = acc.serializer()
         return HttpResponse(template.render(context, request))
+
+
+def report(request):
+    template = loader.get_template('main/report.html')
+    l = Account.objects.all()
+    context = {'users': [i.serializer_2() for i in l]}
+    return HttpResponse(template.render(context, request))
+    pass
 
 
 def all_expenses(request):
@@ -175,7 +181,18 @@ def all_expenses(request):
     acc = Account.get_account_by_user(request.user.id)
     context = {'payed': Expense.get_payed_expenses(acc),
                'not_payed': Expense.get_not_payed_expenses(acc),
-               'friend_not_payed': Expense.get_friend_not_payed_expenses(acc)}
+               'friend_not_payed': Expense.get_friend_not_payed_expenses(acc),
+               'with_url': True}
+    return HttpResponse(template.render(context, request))
+
+
+def report_expenses(request, user_id):
+    template = loader.get_template('main/expenses.html')
+    acc = Account.get_account_by_user(user_id)
+    context = {'payed': Expense.get_payed_expenses(acc),
+               'not_payed': Expense.get_not_payed_expenses(acc),
+               'friend_not_payed': Expense.get_friend_not_payed_expenses(acc),
+               'with_url': False}
     return HttpResponse(template.render(context, request))
 
 

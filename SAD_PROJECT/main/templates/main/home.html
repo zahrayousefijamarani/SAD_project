@@ -64,8 +64,8 @@ body {
   object-position: 50% 10%;
 }
 .profilepic_logout {
-  height: 50px;
-  width: 50px;
+  height: 45px;
+  width: 45px;
   box-shadow: 0 0 42px 0 rgba(255, 255, 255, 0.17);
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(4px);
@@ -176,6 +176,12 @@ color: rgba(255, 255, 255, 0.6);
         <a href='/expenses'>
           <img src="https://www.pngkey.com/png/detail/104-1044757_purse-vector-free-flat-design-wallet-icon-png.png" class='profilepic_logout'>
          </a></div>
+        {% if is_admin %}
+        <div class="photo">
+        <a href='/report'>
+          <img src="data:image/png;base64,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" class='profilepic_logout'>
+         </a></div>
+        {% endif %}
         <div class="photo">
         <a href='/logout'>
               <img src='https://image.pngaaa.com/528/4790528-middle.png' class='profilepic_logout'>

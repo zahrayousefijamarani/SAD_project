@@ -209,7 +209,7 @@ ol.gradient-list > li + li {
     <div class="class1">
         <ul class="w3-ul w3-card-4">
             <li class="w3-bar">
-                    <span>My Payed Expenses</span>
+                    <span>Payed Expenses</span>
             </li>
         </ul>
         <ol class="gradient-list">
@@ -223,13 +223,17 @@ ol.gradient-list > li + li {
     <div class="class2">
         <ul class="w3-ul w3-card-4">
             <li class="w3-bar">
-                    <span>My Not Payed Expenses</span>
+                    <span>Not Payed Expenses</span>
             </li>
         </ul>
         <ol class="gradient-list">
             {% for e in not_payed %}
             <li>
-                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
+                {% if with_url %}
+                    {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
+                {% else %}
+                    {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; {{e.cost}}$
+                {% endif %}
             </li>
             {% endfor %}
         </ol>
@@ -237,13 +241,17 @@ ol.gradient-list > li + li {
     <div class="class3">
         <ul class="w3-ul w3-card-4">
             <li class="w3-bar">
-                    <span>My Friends not payed Expenses</span>
+                    <span>Friends not payed Expenses</span>
             </li>
         </ul>
         <ol class="gradient-list">
             {% for e in friend_not_payed %}
             <li>
-                {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
+                {% if with_url %}
+                    {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/pay/{{e.id}}/">{{e.cost}}$ </a>
+                {% else %}
+                    {{ e.description }}, &nbsp;&nbsp;&nbsp;&nbsp; {{e.cost}}$
+                {% endif %}
             </li>
             {% endfor %}
         </ol>
