@@ -154,10 +154,23 @@ class Expense(models.Model):
     payer = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
 
     def serializer(self):
+        if self.payer:
+            return {
+                'cost': self.amount,
+                'description': self.description,
+                'id': self.pk,
+                'debtor': self.debtor.user.username,
+                'creditor': self.creditor.user.username,
+                'payer': self.payer.user.username,
+            }
+
         return {
             'cost': self.amount,
             'description': self.description,
-            'id': self.pk
+            'id': self.pk,
+            'debtor': self.debtor.user.username,
+            'creditor': self.creditor.user.username,
+            'payer': '',
         }
 
     @staticmethod
@@ -187,8 +200,13 @@ class Expense(models.Model):
         return [i.serializer() for i in l]
 
     @staticmethod
-    def get_payed_expenses(debtor):
+    def get_payed_debtor_expenses(debtor):
         l = Expense.objects.filter(debtor=debtor, payed=True)
+        return [i.serializer() for i in l]
+
+    @staticmethod
+    def get_payed_payer_expenses(debtor):
+        l = Expense.objects.filter(payer=debtor, payed=True)
         return [i.serializer() for i in l]
 
     @staticmethod

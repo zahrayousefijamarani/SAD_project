@@ -179,7 +179,8 @@ def report(request):
 def all_expenses(request):
     template = loader.get_template('main/expenses.html')
     acc = Account.get_account_by_user(request.user.id)
-    context = {'payed': Expense.get_payed_expenses(acc),
+    context = {'payed_payer': Expense.get_payed_payer_expenses(acc),
+               'payed_debtor': Expense.get_payed_debtor_expenses(acc),
                'not_payed': Expense.get_not_payed_expenses(acc),
                'friend_not_payed': Expense.get_friend_not_payed_expenses(acc),
                'with_url': True}
