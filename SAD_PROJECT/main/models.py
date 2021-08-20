@@ -48,6 +48,7 @@ class Account(models.Model):
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
     access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
     uid = models.CharField(max_length=ID_FIELD_LENGTH, null=False, blank=False, unique=True, verbose_name='آیدی یکتا')
+    is_admin = models.BooleanField(default=False)
 
     @classmethod
     def generate_uid(cls):
@@ -62,7 +63,7 @@ class Account(models.Model):
 
         return {
             'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit,
-            'phone_number': self.phone_number
+            'phone_number': self.phone_number, 'is_admin': self.is_admin
         }
 
     def serializer_2(self):
