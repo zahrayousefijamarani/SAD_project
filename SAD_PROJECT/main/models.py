@@ -117,7 +117,7 @@ class Share(models.Model):
 
     def build_expenses(self):
         for accper in self.accPers.all():
-            e = Expense(creditor=self.creditor, share=self, debtor=accper.account)
+            e = Expense(creditor=self.creditor, share=self, debtor=accper.account, description=self.address)
             e.amount = (self.credit * accper.percent) / 100
             e.save()
 
@@ -186,7 +186,7 @@ class Expense(models.Model):
             c_e = Expense.get_not_payed_expenses(c.contact_account)
             for ex in c_e:
                 e.append(ex)
-        return [i.serializer() for i in e]
+        return e
 
 
 class Contact(models.Model):
