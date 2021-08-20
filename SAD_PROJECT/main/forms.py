@@ -44,6 +44,7 @@ class ShareForm(forms.Form):
     date = forms.DateField(label='Date', widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     image = forms.ImageField(label='image', required=False)
     creditor = forms.ChoiceField(choices=(), label='creditor')
+    credit = forms.DecimalField(decimal_places=2, max_digits=20, label='Credit')
 
     def edit(self, my_choices):
         self.fields['creditor'].choices = my_choices

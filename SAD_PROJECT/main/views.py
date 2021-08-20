@@ -203,11 +203,13 @@ def add_share(request, group_id):
             country = form.cleaned_data['country']
             a = Address(address=addr, city=city, state=state, country=country)
             a.save()
+            credit = form.cleaned_data['credit']
             image = form.cleaned_data.get('image')
             date = form.cleaned_data['date']
             c_id = form.cleaned_data['creditor']
             print(c_id)
-            share = Share(date=date, address=a, image=image, group_id=group_id, creditor= Account.get_account_by_user(c_id))
+            share = Share(date=date, address=a, image=image, credit=credit, group_id=group_id,
+                          creditor=Account.get_account_by_user(c_id))
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:
