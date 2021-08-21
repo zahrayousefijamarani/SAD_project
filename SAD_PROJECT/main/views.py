@@ -266,7 +266,11 @@ def add_share_member(request, group_id, share_id):
     if request.method == 'POST':
         acc_id = request.POST['accounts']
         percent = request.POST['percent']
-        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent)
+        amount_of_money = request.POST['amount']
+        print("-------------------------")
+        print(percent)
+        print(amount_of_money)
+        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent, amount_of_money)
     gp = Group.get_group(group_id)
     return render(request, 'main/share_member.html',
                   {'users': gp.get_members(gp),
@@ -279,6 +283,7 @@ def end_share_member(request, group_id, share_id):
     if request.method == 'POST':
         acc_id = request.POST['accounts']
         percent = request.POST['percent']
-        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent)
+        amount_of_money = request.POST['amount']
+        Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent, amount_of_money)
     Share.get_share_by_id(share_id).build_expenses()
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))

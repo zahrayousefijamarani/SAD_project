@@ -115,7 +115,7 @@ class Share(models.Model):
 
     def serializer(self):
         return {
-            'date': self.date, 'address': self.address.address, 'id': self.pk
+            'date': self.date, 'address': self.address.address, 'id': self.pk, 'name': self.name
         }
 
     def build_expenses(self):
@@ -131,8 +131,10 @@ class Share(models.Model):
         return Share.objects.get(pk=id)
 
     @staticmethod
-    def add_shares(id, account, percent):
+    def add_shares(id, account, percent, amount):
         s = Share.get_share_by_id(id)
+        if str(amount) != '':
+            percent = float((float(amount) / float(s.credit)) * 100)
         a = AccPer(account=account, percent=percent)
         a.save()
         s.accPers.add(a)
