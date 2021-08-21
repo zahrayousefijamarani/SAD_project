@@ -39,6 +39,9 @@ class Address(models.Model):
         verbose_name = 'Address'
         verbose_name_plural = 'Address'
 
+    def serialize(self):
+        return str(self.address) + ";" + str(self.city) + ',' + str(self.state) + ',' + str(self.country)
+
 
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -63,7 +66,7 @@ class Account(models.Model):
 
         return {
             'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit,
-            'phone_number': self.phone_number, 'is_admin': self.is_admin
+            'phone_number': self.phone_number, 'is_admin': self.is_admin, 'address': self.address.serialize()
         }
 
     def serializer_2(self):
