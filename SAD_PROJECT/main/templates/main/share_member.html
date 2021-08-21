@@ -352,8 +352,11 @@ a.ssolink {
                                 <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}
                             </select>
-                            <input name="percent" class="dropdown" id="percent" placeholder="Enter percent">
-                            <input name="amount" class="dropdown" id="amount" placeholder="Enter Amount instead of percent">
+                            {% if share_type == 1 %}
+                                <input name="percent" class="dropdown" id="percent" placeholder="Enter percent">
+                            {% elif share_type == 2 %}
+                                <input name="amount" class="dropdown" id="amount" placeholder="Enter Amount">
+                            {% endif %}
                             <div class="my_div">
                                 <button type="submit" class="button button1">Done</button>
                                 <button type="submit" class="button button2"

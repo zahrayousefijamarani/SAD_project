@@ -42,6 +42,13 @@ class TransactionForm(forms.Form):
     description = forms.CharField(label='description', max_length=100)
 
 
+share_type = (
+    ("1", "Percent"),
+    ("2", "Amount"),
+    ("3", "Same")
+)
+
+
 class ShareForm(forms.Form):
     name = forms.CharField(label='name', max_length=100)
     creditor = forms.ChoiceField(choices=(), label='creditor')
@@ -52,6 +59,7 @@ class ShareForm(forms.Form):
     country = forms.CharField(label='country', max_length=50)
     date = forms.DateField(label='Date', widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     image = forms.ImageField(label='image', required=False)
+    share_type = forms.ChoiceField(label='share_type', choices=share_type)
 
     def edit(self, my_choices):
         self.fields['creditor'].choices = my_choices

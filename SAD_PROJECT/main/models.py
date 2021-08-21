@@ -1,3 +1,4 @@
+import decimal
 import random
 import string
 
@@ -115,6 +116,7 @@ class Share(models.Model):
     credit = models.DecimalField(null=False, decimal_places=2, max_digits=20, default="0.0")
     group_id = models.IntegerField(default=0)
     creditor = models.ForeignKey(Account, on_delete=models.CASCADE)
+    share_type = models.IntegerField(default=1)
 
     def serializer(self):
         return {
@@ -122,10 +124,13 @@ class Share(models.Model):
         }
 
     def build_expenses(self):
+        n = len(self.accPers.all())
         for accper in self.accPers.all():
             if self.creditor == accper.account:
                 continue
-            e = Expense(creditor=self.creditor, share=self, debtor=accper.account, description=self.address)
+            if self.share_type == 3:
+                accper.percent = decimal.Decimal(100 / n)
+            e = Expense(creditor=self.creditor, share=self, debtor=accper.account, description=self.name)
             e.amount = (self.credit * accper.percent) / 100
             e.save()
 

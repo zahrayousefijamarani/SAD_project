@@ -14,7 +14,6 @@ from .models import Account, Contact, Expense, Address, Share
 from django.core.mail import send_mail
 
 
-
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -190,7 +189,8 @@ def all_expenses(request):
 def report_expenses(request, user_id):
     template = loader.get_template('main/expenses.html')
     acc = Account.get_account_by_user(user_id)
-    context = {'payed': Expense.get_payed_expenses(acc),
+    context = {'payed_payer': Expense.get_payed_payer_expenses(acc),
+               'payed_debtor':Expense.get_payed_debtor_expenses(acc),
                'not_payed': Expense.get_not_payed_expenses(acc),
                'friend_not_payed': Expense.get_friend_not_payed_expenses(acc),
                'with_url': False}
@@ -248,9 +248,10 @@ def add_share(request, group_id):
             image = form.cleaned_data.get('image')
             date = form.cleaned_data['date']
             c_id = form.cleaned_data['creditor']
+            share_type = form.cleaned_data['share_type']
             print(c_id)
             share = Share(name=name, date=date, address=a, image=image, credit=credit, group_id=group_id,
-                          creditor=Account.get_account_by_user(c_id))
+                          creditor=Account.get_account_by_user(c_id), share_type= share_type)
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:
@@ -263,10 +264,16 @@ def add_share(request, group_id):
 
 
 def add_share_member(request, group_id, share_id):
+    share_type = Share.get_share_by_id(share_id).share_type
     if request.method == 'POST':
         acc_id = request.POST['accounts']
-        percent = request.POST['percent']
-        amount_of_money = request.POST['amount']
+        if share_type == 1:
+            percent = request.POST['percent']
+        elif share_type == 2:
+            amount_of_money = request.POST['amount']
+        else:
+            percent = 0
+            amount_of_money = 0
         print("-------------------------")
         print(percent)
         print(amount_of_money)
@@ -275,15 +282,24 @@ def add_share_member(request, group_id, share_id):
     return render(request, 'main/share_member.html',
                   {'users': gp.get_members(gp),
                    'group_id': group_id,
-                   'share_id': share_id
+                   'share_id': share_id,
+                   'share_type': share_type
                    })
 
 
 def end_share_member(request, group_id, share_id):
+    share_type = Share.get_share_by_id(share_id).share_type
     if request.method == 'POST':
         acc_id = request.POST['accounts']
-        percent = request.POST['percent']
-        amount_of_money = request.POST['amount']
+        if share_type == 1:
+            percent = request.POST['percent']
+            amount_of_money = 0
+        elif share_type == 2:
+            amount_of_money = request.POST['amount']
+            percent = 0
+        else:
+            percent = 0
+            amount_of_money = 0
         Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent, amount_of_money)
     Share.get_share_by_id(share_id).build_expenses()
     return HttpResponseRedirect(reverse('main:show_group', args=(group_id,)))
