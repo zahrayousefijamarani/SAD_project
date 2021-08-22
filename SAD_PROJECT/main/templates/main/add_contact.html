@@ -216,30 +216,30 @@ input[type=submit]:active {
 <form action="" method="post">
         {% csrf_token %}
 <div class="container">
-	<div class="todo_list">
-		<ul>
+        <div class="todo_list">
+                <ul>
             {% for c in users %}
-			<li><!--TO DO ITEM START-->
-				<label>
-					<input type="checkbox" name ="tag" value="{{c.id}}" class="hidden_real_check"/>
-					<div class="todo_element">
+                        <li><!--TO DO ITEM START-->
+                                <label>
+                                        <input type="checkbox" name ="tag" value="{{c.id}}" class="hidden_real_check"/>
+                                        <div class="todo_element">
 
-						<span class="customized_ckeck">
-							<span class="checkbox">
-								<span class='internal_one'></span>
-								<span class='internal_two'></span>
-							</span>
-						</span>
-						<span class="element_title">{{c.email}}, {{c.name}}</span>
-					</div>
-				</label>
-			</li><!--TO DO ITEM END-->
+                                                <span class="customized_ckeck">
+                                                        <span class="checkbox">
+                                                                <span class='internal_one'></span>
+                                                                <span class='internal_two'></span>
+                                                        </span>
+                                                </span>
+                                                <span class="element_title">{{c.email}}, {{c.name}}</span>
+                                        </div>
+                                </label>
+                        </li><!--TO DO ITEM END-->
             {% endfor %}
-		</ul>
-	</div>
+                </ul>
+        </div>
 <input type="submit" value="Done">
 </div>
-	</form>
+        </form>
 {% endblock %}
 
 </body>
