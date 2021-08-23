@@ -141,7 +141,7 @@ class Share(models.Model):
     @staticmethod
     def add_shares(id, account, percent, amount):
         s = Share.get_share_by_id(id)
-        if str(amount) != '':
+        if amount != 0:
             percent = float((float(amount) / float(s.credit)) * 100)
         a = AccPer(account=account, percent=percent)
         a.save()

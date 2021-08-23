@@ -113,6 +113,7 @@ def group_member_request(request, group_id):
 
 
 def acc_group_request(request, group_id, user_id):
+    print(user_id)
     Group.add_members(group_id, [user_id])
     return HttpResponseRedirect(reverse('main:homepage', args=()))
 
@@ -269,14 +270,13 @@ def add_share_member(request, group_id, share_id):
         acc_id = request.POST['accounts']
         if share_type == 1:
             percent = request.POST['percent']
+            amount_of_money = 0
         elif share_type == 2:
             amount_of_money = request.POST['amount']
+            percent = 0
         else:
             percent = 0
             amount_of_money = 0
-        print("-------------------------")
-        print(percent)
-        print(amount_of_money)
         Share.add_shares(share_id, Account.get_account_by_user(acc_id), percent, amount_of_money)
     gp = Group.get_group(group_id)
     return render(request, 'main/share_member.html',

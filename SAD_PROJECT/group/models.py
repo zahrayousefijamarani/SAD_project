@@ -23,7 +23,7 @@ class Group(models.Model):
     def add_members(id, member_list):
         gp = Group.objects.get(pk=id)
         for l in member_list:
-            gp.members.add(l)
+            gp.members.add(Account.get_account_by_user(l))
 
     @staticmethod
     def get_group(id):
