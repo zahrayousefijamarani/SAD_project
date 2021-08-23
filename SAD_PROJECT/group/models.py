@@ -1,12 +1,15 @@
 from django import forms
 from django.db import models
+
 # Create your models here.
 from main.models import Account
 
 
 class Group(models.Model):
     group_name = models.CharField(max_length=250)
-    admin = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="admin_account")
+    admin = models.ForeignKey(
+        Account, on_delete=models.CASCADE, related_name="admin_account"
+    )
     members = models.ManyToManyField(Account, related_name="member_accounts")
 
     @staticmethod
@@ -29,9 +32,7 @@ class Group(models.Model):
         return Group.objects.get(pk=id)
 
     def serializer(self):
-        return {
-            'name': self.group_name, 'id': self.pk
-        }
+        return {'name': self.group_name, 'id': self.pk}
 
     @staticmethod
     def get_all_group(account):
