@@ -191,7 +191,7 @@ def report_expenses(request, user_id):
     template = loader.get_template('main/expenses.html')
     acc = Account.get_account_by_user(user_id)
     context = {'payed_payer': Expense.get_payed_payer_expenses(acc),
-               'payed_debtor':Expense.get_payed_debtor_expenses(acc),
+               'payed_debtor': Expense.get_payed_debtor_expenses(acc),
                'not_payed': Expense.get_not_payed_expenses(acc),
                'friend_not_payed': Expense.get_friend_not_payed_expenses(acc),
                'with_url': False}
@@ -204,8 +204,7 @@ def pay(request, cost_id):
         context = {}
         return HttpResponse(template.render(context, request))
     else:
-        acc = Account.get_account_by_user(request.user.id)
-        err = Expense.pay_expenses(cost_id, acc)
+        err = Expense.pay_expenses(cost_id, request.user.id)
         if err is None:
             return HttpResponseRedirect(reverse('main:expenses'))
         return HttpResponseRedirect(reverse('main:expenses'))
@@ -250,9 +249,8 @@ def add_share(request, group_id):
             date = form.cleaned_data['date']
             c_id = form.cleaned_data['creditor']
             share_type = form.cleaned_data['share_type']
-            print(c_id)
             share = Share(name=name, date=date, address=a, image=image, credit=credit, group_id=group_id,
-                          creditor=Account.get_account_by_user(c_id), share_type= share_type)
+                          creditor=Account.get_account_by_user(c_id), share_type=share_type)
             share.save()
             return HttpResponseRedirect(reverse('main:add_share_member', args=(group_id, share.pk)))
     else:

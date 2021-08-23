@@ -75,7 +75,7 @@ class Account(models.Model):
             'id': self.user.pk, 'name': self.user.username, 'email': self.user.email, }
 
     def serializer_3(self):
-        return self.user.pk, self.user.username
+        return (self.user.pk, self.user.username)
 
     def save(self, *args, **kwargs):
         if not self.uid:
@@ -85,7 +85,7 @@ class Account(models.Model):
 
     @classmethod
     def get_account_by_user(cls, user_id):
-        return cls.objects.get(user__id=user_id)
+        return Account.objects.get(user__id=user_id)
 
     @classmethod
     def new_account(cls, user):
@@ -131,7 +131,7 @@ class Share(models.Model):
             if self.share_type == 3:
                 accper.percent = decimal.Decimal(100 / n)
             e = Expense(creditor=self.creditor, share=self, debtor=accper.account, description=self.name)
-            e.amount = (self.credit * accper.percent) / 100
+            e.amount = round((self.credit * accper.percent) / 100, 1)
             e.save()
 
     @staticmethod
@@ -184,22 +184,28 @@ class Expense(models.Model):
         }
 
     @staticmethod
-    def pay_expenses(expense_id, payer):
+    def pay_expenses(expense_id, payer_id):
         e = Expense.objects.get(pk=expense_id)
         if e is None:
             return "Expense does not exist."
         if not e.payed:
-            e.payed = True
-            e.payer = payer
             creditor_wallet = e.creditor.wallet
+            creditor_wallet.credit += e.amount
+            creditor_wallet.save()
+            e.creditor.wallet = creditor_wallet
+            e.save()
+
+            payer = Account.get_account_by_user(payer_id)
+
             payer_wallet = payer.wallet
 
             payer_wallet.credit -= e.amount
             payer_wallet.save()
+            payer.wallet = payer_wallet
+            payer.save()
 
-            creditor_wallet.credit += e.amount
-            creditor_wallet.save()
-
+            e.payed = True
+            e.payer = payer
             e.save()
             return None
         return "Already payed."
@@ -212,7 +218,11 @@ class Expense(models.Model):
     @staticmethod
     def get_payed_debtor_expenses(debtor):
         l = Expense.objects.filter(debtor=debtor, payed=True)
-        return [i.serializer() for i in l]
+        out = []
+        for i in l:
+            if i.debtor.pk != debtor.pk:
+                out.append(i)
+        return [i.serializer() for i in out]
 
     @staticmethod
     def get_payed_payer_expenses(debtor):
