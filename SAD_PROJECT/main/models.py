@@ -52,7 +52,7 @@ class Account(models.Model):
     wallet = models.ForeignKey(Wallet, related_name='accounts', on_delete=models.CASCADE)
     access_final_date = models.DateField(verbose_name='تاریخ انقضای token', auto_now=True)
     uid = models.CharField(max_length=ID_FIELD_LENGTH, null=False, blank=False, unique=True, verbose_name='آیدی یکتا')
-    is_admin = models.BooleanField(default=False)
+    image = models.ImageField(null=True, blank=True, upload_to='images/users/%Y/%m/%d/')
 
     @classmethod
     def generate_uid(cls):
@@ -67,7 +67,8 @@ class Account(models.Model):
 
         return {
             'uid': self.uid, 'username': self.user.username, 'email': self.user.email, 'credit': self.wallet.credit,
-            'phone_number': self.phone_number, 'is_admin': self.is_admin, 'address': self.address.serialize()
+            'phone_number': self.phone_number, 'is_admin': self.is_admin, 'address': self.address.serialize(),
+            'image_url': self.image
         }
 
     def serializer_2(self):
@@ -111,7 +112,7 @@ class Share(models.Model):
     name = models.CharField(max_length=100, default="share")
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     date = models.DateField()
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='images/shares/%Y/%m/%d/')
     accPers = models.ManyToManyField(AccPer)
     credit = models.DecimalField(null=False, decimal_places=2, max_digits=20, default="0.0")
     group_id = models.IntegerField(default=0)
@@ -120,7 +121,7 @@ class Share(models.Model):
 
     def serializer(self):
         return {
-            'date': self.date, 'address': self.address.address, 'id': self.pk, 'name': self.name
+            'date': self.date, 'address': self.address.address, 'id': self.pk, 'name': self.name, 'image': self.image
         }
 
     def build_expenses(self):

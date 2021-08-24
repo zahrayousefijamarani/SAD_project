@@ -11,7 +11,6 @@ from SAD_PROJECT import settings
 from group.models import Group, GroupForm
 from .forms import NewUserForm, ShareForm, EditForm
 from .models import Account, Contact, Expense, Address, Share
-from django.core.mail import send_mail
 
 
 def register_request(request):
@@ -212,17 +211,19 @@ def pay(request, cost_id):
 
 def edit_profile(request):
     if request.method == 'POST':
-        form = EditForm(request.POST)
+        form = EditForm(request.POST, request.FILES)
         if form.is_valid():
             addr = form.cleaned_data['address']
             city = form.cleaned_data['city']
             state = form.cleaned_data['state']
             country = form.cleaned_data['country']
+            image = form.cleaned_data['image']
             phone_number = form.cleaned_data['phone_number']
             my_user = Account.get_account_by_user(request.user.id)
             my_user.phone_number = phone_number
             a = Address(address=addr, city=city, state=state, country=country)
             a.save()
+            my_user.image = image
             my_user.address = a
             my_user.save()
             return redirect("main:homepage")
@@ -234,7 +235,7 @@ def edit_profile(request):
 def add_share(request, group_id):
     gp = Group.get_group(group_id)
     if request.method == 'POST':
-        form = ShareForm(request.POST)
+        form = ShareForm(request.POST, request.FILES)
         form.edit(my_choices=gp.get_members(gp, True))
         if form.is_valid():
             name = form.cleaned_data['name']
@@ -245,7 +246,7 @@ def add_share(request, group_id):
             a = Address(address=addr, city=city, state=state, country=country)
             a.save()
             credit = form.cleaned_data['credit']
-            image = form.cleaned_data.get('image')
+            image = form.cleaned_data['image']
             date = form.cleaned_data['date']
             c_id = form.cleaned_data['creditor']
             share_type = form.cleaned_data['share_type']

@@ -239,7 +239,7 @@ input[type=submit]:active {
 <!--    </form>-->
 <!--</div>-->
 <div class="login">
-    <form action="/edit/" method="post">
+    <form action="/edit/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
         <p class="submit"><input type="submit" name="edit" value="Edit"></p>

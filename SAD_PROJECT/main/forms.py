@@ -29,11 +29,12 @@ class AddCustomInfo(forms.Form):
 
 
 class EditForm(forms.Form):
+    phone_number = forms.CharField(label='phone number', max_length=17)
+    image = forms.ImageField(label='image', required=False)
     address = forms.CharField(label='address', max_length=100)
     city = forms.CharField(label='city', max_length=60)
     state = forms.CharField(label='state', max_length=30)
     country = forms.CharField(label='country', max_length=50)
-    phone_number = forms.CharField(label='phone number', max_length=17)
 
 
 class TransactionForm(forms.Form):
