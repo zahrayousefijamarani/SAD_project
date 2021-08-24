@@ -221,7 +221,7 @@ class Expense(models.Model):
         l = Expense.objects.filter(debtor=debtor, payed=True)
         out = []
         for i in l:
-            if i.debtor.pk != debtor.pk:
+            if i.payer.pk != debtor.pk:
                 out.append(i)
         return [i.serializer() for i in out]
 
