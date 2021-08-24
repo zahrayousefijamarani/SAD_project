@@ -104,7 +104,7 @@ class Account(models.Model):
 
 class AccPer(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    percent = models.IntegerField()
+    percent = models.DecimalField(max_digits=5, decimal_places=1)
 
 
 class Share(models.Model):
@@ -142,7 +142,7 @@ class Share(models.Model):
     def add_shares(id, account, percent, amount):
         s = Share.get_share_by_id(id)
         if amount != 0:
-            percent = float((float(amount) / float(s.credit)) * 100)
+            percent = decimal.Decimal((decimal.Decimal(amount) / decimal.Decimal(s.credit)) * 100)
         a = AccPer(account=account, percent=percent)
         a.save()
         s.accPers.add(a)
